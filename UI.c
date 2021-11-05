@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "relativefiles.h""
 
 int main(void){
 	int input;\
