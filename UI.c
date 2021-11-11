@@ -16,6 +16,7 @@ int main(void){
 		}
 		if(input == 1){
 			printf("Adding new customers\n");
+			addnewcustomers();
 		}
 		if(input == 2){
 			printf("Adding new suppliers\n");

@@ -4,21 +4,21 @@
 #include <io.h>
 #include <fcntl.h>
 
-#define NAMELEN 16
+#define NAMELEN 32
 #define BUSINESSNAMELEN 16
 #define ADRESSLEN 32
 
 struct customer{
 	long CID;
-	char lastname[NAMELEN];
-	char firstname[NAMELEN];
+	char name[NAMELEN];
 	char businessname[BUSINESSNAMELEN];
 	char streetaddress[ADRESSLEN];
 	char town[NAMELEN];
-	char province[NAMELEN]
+	char province[NAMELEN];
 	char postalcode[NAMELEN];
-	char telephone[]
+	char telephone[NAMELEN];
 };
+typedef struct customer CUSTOMER;
 
 
 
