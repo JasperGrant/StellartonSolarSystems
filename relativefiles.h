@@ -4,19 +4,18 @@
 #include <io.h>
 #include <fcntl.h>
 
-#define NAMELEN 32
-#define BUSINESSNAMELEN 16
-#define ADRESSLEN 32
+#define MAXLEN 32
+#define MAXREC 256
 
 struct customer{
 	long CID;
-	char name[NAMELEN];
-	char businessname[BUSINESSNAMELEN];
-	char streetaddress[ADRESSLEN];
-	char town[NAMELEN];
-	char province[NAMELEN];
-	char postalcode[NAMELEN];
-	char telephone[NAMELEN];
+	char name[MAXLEN];
+	char businessname[MAXLEN];
+	char streetaddress[MAXLEN];
+	char town[MAXLEN];
+	char province[MAXLEN];
+	char postalcode[MAXLEN];
+	char telephone[MAXLEN];
 };
 typedef struct customer CUSTOMER;
 

@@ -8,16 +8,27 @@
 
 int addnewcustomers(void){
 	CUSTOMER newcustomer;
-	char filename[NAMELEN];
-	char customerarray[256];
-	printf("Enter input file name:\n");
-	scanf("%s", &filename);
-	FILE * input = fopen(filename, "r+");
-	while(fgets(customerarray, 256, input) != NULL){
-		strtok(customerarray, ",")
+	char filename[MAXLEN];
+	char *element;
+	char temprecord[MAXREC];
+	//printf("Enter input file name:\n");
+	//scanf("%s", &filename);
+	FILE * input = fopen("Customers.txt", "r");
+	FILE * output = fopen("customersrelativefile.txt", "a+");
+	fwrite(element, MAXLEN, 1, output);
+	long examplecid = 1001;
+	while (fgets(temprecord, MAXREC, input)){
+		fwrite(&examplecid, MAXLEN, 1, output);
+		element = strtok(temprecord, ",");
+		while (element){
+			
+			printf("%s\n", element);
+			fwrite(element, MAXLEN, 1, output);
+			element = strtok(NULL, ",");
+		}
+		examplecid++;
 	}
-	printf("%s", filename);
-	
-	
+	fclose(input);
+	fclose(output);
 	
 }
