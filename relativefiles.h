@@ -6,6 +6,7 @@
 
 #define MAXLEN 32
 #define MAXREC 256
+#define TRUNCATE(name) name[strlen(name)-1] = '\0'
 
 struct customer{
 	long CID;
