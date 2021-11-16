@@ -3,7 +3,7 @@
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
-
+#define NAMELEN 32
 #define MAXLEN 32
 #define MAXREC 256
 #define TRUNCATE(name) name[strlen(name)-1] = '\0'

@@ -15,6 +15,7 @@ int main(void){
 		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n0. Quit\n");
 		scanf("%d", &input);
 		if(input == 0){
+			addnewcustomers();
 			return 0;
 		}
 		if(input == 1){
