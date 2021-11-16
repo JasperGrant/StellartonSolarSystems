@@ -7,6 +7,7 @@
 #include "relativefiles.h"
 
 int main(void){
+	_set_fmode_(_O_BINARY);
 	int input;
 	initcustomers();
 	while(1){
