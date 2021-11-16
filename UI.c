@@ -7,9 +7,10 @@
 #include "relativefiles.h"
 
 int main(void){
-	_set_fmode_(_O_BINARY);
+	//_set_fmode_(_O_BINARY);
 	int input;
 	initcustomers();
+	readcustomers();
 	while(1){
 		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n0. Quit\n");
 		scanf("%d", &input);
