@@ -18,13 +18,15 @@ int initcustomers(void){
 	FILE * input = fopen("Customers.txt", "r");
 	FILE * output = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
 
-	long customerid = header.first_cid = 1000; //First value is used for text file labels, 1001 is the first real record.
+	long customerid = header.first_cid = 1001; //1001 is the first CID
 	
 	fseek(output, 0, SEEK_SET);
 	fwrite(&header, sizeof(HEADER_CUSTOMER), 1, output);
 	
+	fgets(temprecord, MAXREC, input); //Disregard first line
+	
 	while (fgets(temprecord, MAXREC, input)){
-		
+		TRUNCATE(temprecord);
 		newcustomer.CID = customerid;
 		
 		element = strtok(temprecord, ",");
@@ -62,6 +64,7 @@ int initcustomers(void){
 int readcustomers(void){
 	CUSTOMER customer;
 	FILE * output = fopen("customersrelativefile.txt", "r+");
+	
 	fseek(output, sizeof(HEADER_CUSTOMER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, output);
 	printf("Customer:%s, %d, %s, %s, %s, %s, %s, %s\n", customer.name, customer.CID, customer.businessname, customer.streetaddress, customer.town, customer.province, customer.postalcode, customer.telephone);

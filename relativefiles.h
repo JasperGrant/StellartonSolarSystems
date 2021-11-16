@@ -33,6 +33,7 @@ extern FILE *cfd;
 int initcustomers(void);
 int addnewcustomers(void);
 int readcustomers(void);
+int initproducts(void);
 int addnewproducts(void);
 int addnewsuppliers(void);
 int makesale(void);
