@@ -11,7 +11,7 @@ int initcustomers(void){
 
 	HEADER header;
 
-	CUSTOMER newcustomer;
+	CUSTOMER customer;
 	char *element;
 	char temprecord[MAXREC];
 	
@@ -27,32 +27,32 @@ int initcustomers(void){
 	
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
-		newcustomer.CID = customerid;
+		customer.CID = customerid;
 		
 		element = strtok(temprecord, ",");
-		strcpy(newcustomer.name, element);
+		strcpy(customer.name, element);
 		
 		element = strtok(NULL, ",");	
-		strcpy(newcustomer.businessname, element);
+		strcpy(customer.businessname, element);
 	
 		element = strtok(NULL, ",");
-		strcpy(newcustomer.streetaddress, element);
+		strcpy(customer.streetaddress, element);
 		
 		element = strtok(NULL, ",");	
-		strcpy(newcustomer.town, element);
+		strcpy(customer.town, element);
 		
 		element = strtok(NULL, ",");	
-		strcpy(newcustomer.province, element);
+		strcpy(customer.province, element);
 		
 		element = strtok(NULL, ",");	
-		strcpy(newcustomer.postalcode, element);
+		strcpy(customer.postalcode, element);
 		
 		element = strtok(NULL, ",");	
-		strcpy(newcustomer.telephone, element);
+		strcpy(customer.telephone, element);
 		
 		customerid++;
-		fseek(output, ((newcustomer.CID - 1001) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
-		fwrite(&newcustomer, sizeof(CUSTOMER), 1, output);
+		fseek(output, ((customer.CID - 1001) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
+		fwrite(&customer, sizeof(CUSTOMER), 1, output);
 	}
 	header.first_id = customerid;
 	fseek(output, 0, SEEK_SET);
@@ -71,7 +71,7 @@ int readcustomers(void){
 	FILE * output = fopen("customersrelativefile.txt", "r+");
 	
 	fseek(output, 0, SEEK_SET);
-	fread(&header, sizeof(CUSTOMER), 1, output);
+	fread(&header, sizeof(HEADER), 1, output);
 	printf("Header: %ld\n", header.first_id);
 	for(int i = 0;i<header.first_id-1001; i++){
 		fseek(output, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
@@ -88,65 +88,67 @@ int readcustomers(void){
 
 int addnewcustomers(void)
 {
-/* Add a customer to the customerfile */
-CUSTOMER newcustomer;
-HEADER_CUSTOMER header;
-int customer_id;
-
-
-FILE * cfd = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
-
-
-/* Access header record to get first available customer id */
-fseek(cfd, 0, SEEK_SET);
-fread(&header, sizeof(HEADER_CUSTOMER), 1, cfd);
-
-
-/* Geting all the information */
-
-printf("Enter name\n");
-fgets(newcustomer.name, NAMELEN, stdin);
-TRUNCATE(newcustomer.name);
-
-printf("Enter businessname\n");
-fgets(newcustomer.businessname, MAXLEN, stdin);
-TRUNCATE(newcustomer.businessname);
-
-printf("Enter street address\n");
-fgets(newcustomer.streetaddress, MAXLEN, stdin);
-TRUNCATE(newcustomer.streetaddress);
-
-printf("Enter town\n");
-fgets(newcustomer.town, MAXLEN, stdin);
-TRUNCATE(newcustomer.town);
-
-printf("Enter province\n");
-fgets(newcustomer.province, MAXLEN, stdin);
-TRUNCATE(newcustomer.province);
-
-printf("Enter postalcode\n");
-fgets(newcustomer.postalcode, MAXLEN, stdin);
-TRUNCATE(newcustomer.postalcode);
-
-printf("Enter Telephone\n");
-fgets(newcustomer.postalcode, MAXLEN, stdin);
-TRUNCATE(newcustomer.postalcode);
-
-
-
-/* Complete remaining fields */
-newcustomer.CID= customer_id;
-/* Display complete record */
-printf("ID: >%d< Name: >%s< businessname: >%s< Province: >%s<  Town: >%s<  postal code: >%s<  telephone: >%s<\n", 
-	newcustomer.CID, newcustomer.name, newcustomer.businessname, newcustomer.province, newcustomer.town, newcustomer.postalcode, newcustomer.telephone);
-/* 
- - Write customer data to customer file
-*/
-fwrite(&newcustomer, sizeof(CUSTOMER), 1, cfd);
-
-fseek(cfd, 0, SEEK_SET);
-header.first_cid = header.first_cid + 1;
-fwrite(&header, sizeof(HEADER_CUSTOMER), 1, cfd);
+	/* Add a customer to the customerfile */
+	CUSTOMER customer;
+	HEADER header;
+	
+	
+	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	
+	
+	/* Access header record to get first available customer id */
+	fseek(cfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, cfd);
+	
+	
+	/* Geting all the information */
+	
+	printf("Enter name\n");
+	fgets(customer.name, MAXLEN, stdin);
+	TRUNCATE(customer.name);
+	
+	printf("Enter businessname\n");
+	fgets(customer.businessname, MAXLEN, stdin);
+	TRUNCATE(customer.businessname);
+	
+	printf("Enter street address\n");
+	fgets(customer.streetaddress, MAXLEN, stdin);
+	TRUNCATE(customer.streetaddress);
+	
+	printf("Enter town\n");
+	fgets(customer.town, MAXLEN, stdin);
+	TRUNCATE(customer.town);
+	
+	printf("Enter province\n");
+	fgets(customer.province, MAXLEN, stdin);
+	TRUNCATE(customer.province);
+	
+	printf("Enter postalcode\n");
+	fgets(customer.postalcode, MAXLEN, stdin);
+	TRUNCATE(customer.postalcode);
+	
+	printf("Enter Telephone\n");
+	fgets(customer.postalcode, MAXLEN, stdin);
+	TRUNCATE(customer.postalcode);
+	
+	
+	
+	/* Complete remaining fields */
+	/* Display complete record */
+	//printf("ID: >%d< Name: >%s< businessname: >%s< Province: >%s<  Town: >%s<  postal code: >%s<  telephone: >%s<\n", 
+	//	customer.CID, customer.name, customer.businessname, customer.province, customer.town, customer.postalcode, customer.telephone);
+	
+	
+	printf("\nID: %d\n", header.first_id);
+	fseek(cfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(CUSTOMER), SEEK_SET);
+	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
+	//printf("HELLO\n");
+	fseek(cfd, 0, SEEK_SET);
+	header.first_id++;
+	fwrite(&header, sizeof(HEADER), 1, cfd);
+	
+	fclose(cfd);
+	
 }
 
 
