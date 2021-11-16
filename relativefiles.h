@@ -20,6 +20,22 @@ struct customer{
 };
 typedef struct customer CUSTOMER;
 
+union customer_file
+{
+CUSTOMER crec;
+HEADER_CUSTOMER hrec;
+DEL_CUS drec;
+};
+typedef union customer_file CFREC;
+
+struct header_customer
+{
+long del_rec_list;	/* Deleted record list */
+long first_cid;		/* First available sid */
+};
+typedef struct header_customer HEADER_CUSTOMER;
+extern FILE *cfd;
+
 
 
 int initcustomers(void);
