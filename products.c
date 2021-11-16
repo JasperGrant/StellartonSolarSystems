@@ -7,7 +7,7 @@
 
 #include "relativefiles.h"
 
-int initcustomers(void){
+int initproducts(void){ //TODO
 
 	HEADER_CUSTOMER header;
 
@@ -65,7 +65,7 @@ int initcustomers(void){
 	
 }
 
-int readcustomers(void){
+int readproducts(void){ //TODO
 	CUSTOMER customer;
 	HEADER_CUSTOMER header;
 	FILE * output = fopen("customersrelativefile.txt", "r+");
