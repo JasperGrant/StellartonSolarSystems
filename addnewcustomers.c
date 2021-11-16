@@ -3,6 +3,7 @@
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#define N 100
 
 #include "relativefiles.h"
 
