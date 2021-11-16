@@ -22,7 +22,7 @@ typedef struct customer CUSTOMER;
 
 
 
-int addnewcustomers(void);
+int initcustomers(void);
 int addnewpeoducts(void);
 int addnewsuppliers(void);
 int makesale(void);

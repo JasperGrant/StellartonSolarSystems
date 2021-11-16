@@ -6,7 +6,7 @@
 
 #include "relativefiles.h"
 
-int addnewcustomers(void){
+int initcustomers(void){
 	
 	//CUSTOMER newcustomer;
 	char filename[MAXLEN];

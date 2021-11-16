@@ -8,6 +8,7 @@
 
 int main(void){
 	int input;
+	initcustomers();
 	while(1){
 		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n0. Quit\n");
 		scanf("%d", &input);
@@ -16,7 +17,6 @@ int main(void){
 		}
 		if(input == 1){
 			printf("Adding new customers\n");
-			addnewcustomers();
 		}
 		if(input == 2){
 			printf("Adding new suppliers\n");
