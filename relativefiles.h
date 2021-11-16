@@ -20,13 +20,29 @@ struct customer{
 };
 typedef struct customer CUSTOMER;
 
-struct header_customer
-{
-	long first_cid;		/* First available sid */
-	long del_rec_list;	/* Deleted record list */
+struct product{
+	char name[MAXLEN];
+	char classificationn[MAXLEN];
+	char manufacturer[MAXLEN];
+	int unitcost[MAXLEN];
+	char manufacturercode[MAXLEN];
+	int stock;
 };
-typedef struct header_customer HEADER_CUSTOMER;
-extern FILE *cfd;
+
+struct supplier{
+	char manufacturer[MAXLEN];
+	char contact[MAXLEN];
+	char company[MAXLEN];
+	char address[MAXLEN];
+	char telephone[MAXLEN];
+	
+};
+
+struct header
+{
+	long first_id; //First availible ID
+};
+typedef struct header HEADER;
 
 
 
