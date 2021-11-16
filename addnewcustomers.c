@@ -9,7 +9,7 @@
 
 int initcustomers(void){
 
-	HEADER_CUSTOMER header;
+	HEADER header;
 
 	CUSTOMER newcustomer;
 	char *element;
@@ -18,10 +18,10 @@ int initcustomers(void){
 	FILE * input = fopen("Customers.txt", "r");
 	FILE * output = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
 
-	long customerid = header.first_cid = 1001; //1001 is the first CID
+	long customerid = header.first_id = 1001; //1001 is the first CID
 	
 	fseek(output, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER_CUSTOMER), 1, output);
+	fwrite(&header, sizeof(HEADER), 1, output);
 	
 	fgets(temprecord, MAXREC, input); //Disregard first line
 	
@@ -51,9 +51,13 @@ int initcustomers(void){
 		strcpy(newcustomer.telephone, element);
 		
 		customerid++;
-		fseek(output, ((newcustomer.CID - 1001) * sizeof(CUSTOMER)) + sizeof(HEADER_CUSTOMER), SEEK_SET);
+		fseek(output, ((newcustomer.CID - 1001) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&newcustomer, sizeof(CUSTOMER), 1, output);
 	}
+	header.first_id = customerid;
+	fseek(output, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, output);
+	
 	fclose(input);
 	fclose(output);
 	
@@ -63,11 +67,19 @@ int initcustomers(void){
 
 int readcustomers(void){
 	CUSTOMER customer;
+	HEADER header;
 	FILE * output = fopen("customersrelativefile.txt", "r+");
 	
-	fseek(output, sizeof(HEADER_CUSTOMER), SEEK_SET);
-	fread(&customer, sizeof(CUSTOMER), 1, output);
-	printf("Customer:%s, %d, %s, %s, %s, %s, %s, %s\n", customer.name, customer.CID, customer.businessname, customer.streetaddress, customer.town, customer.province, customer.postalcode, customer.telephone);
+	fseek(output, 0, SEEK_SET);
+	fread(&header, sizeof(CUSTOMER), 1, output);
+	printf("Header: %ld\n", header.first_id);
+	for(int i = 0;i<header.first_id-1001; i++){
+		fseek(output, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+		fread(&customer, sizeof(CUSTOMER), 1, output);
+		printf("Customer: %s, %ld, %s, %s, %s, %s, %s, %s\n", 
+		customer.name, customer.CID, customer.businessname, customer.streetaddress, 
+		customer.town, customer.province, customer.postalcode, customer.telephone);
+	}
 }
 
 
