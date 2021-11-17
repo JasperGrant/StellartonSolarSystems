@@ -7,11 +7,8 @@
 
 #include "relativefiles.h"
 
-<<<<<<<< Updated upstream:suppliers.c
-int initsuppliers(void){
-========
+/*
 int initproducts(void){
->>>>>>>> Stashed changes:products.c
 
 	HEADER header;
 	
@@ -63,8 +60,7 @@ int initproducts(void){
 	return 0;
 	
 }
-<<<<<<<< Updated upstream:suppliers.c
-========
+
 
 int readproducts(void){
 	PRODUCT product;
@@ -85,5 +81,4 @@ int readproducts(void){
 		
 	}
 }
-
->>>>>>>> Stashed changes:products.c
+*/

@@ -27,6 +27,7 @@ int initproducts(void){ //TODO
 		product.PID = productid;
 		
 		element = strtok(temprecord, "\t\"$");
+		printf("%s\n", element);
 		strcpy(product.name, element);
 
 		element = strtok(NULL, "\t\"$");	
@@ -36,6 +37,7 @@ int initproducts(void){ //TODO
 		strcpy(product.manufacturer, element);
 		
 		element = strtok(NULL, "\t\"$");	
+		//element[0] = '0';
 		product.unitcost = (int)atof(element)*100;
 
 		element = strtok(NULL, "\t\"$");	
@@ -67,19 +69,23 @@ int readproducts(void){ //TODO
 	fread(&header, sizeof(HEADER), 1, output);
 	printf("Header: %ld\n", header.first_id);
 	for(int i = 0;i<header.first_id-1001; i++){
-		fseek(output, i*sizeof(PRODUCT) + sizeof(PRODUCT), SEEK_SET);
+		fseek(output, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 		fread(&product, sizeof(PRODUCT), 1, output);
-		printf("product: %s, %ld, %s, %s, %s, %s, %s, %s\n", 
-		product.name, product.CID, product.businessname, product.streetaddress, 
-		product.town, product.province, product.postalcode, product.telephone);
+		//printf("%s\n", product.name);
+		
+		printf("Product: %s, %ld, %s, %s, %.2f, %s, %d\n", 
+		product.name, product.PID, product.classification, product.manufacturer, 
+		(float)product.unitcost/100, product.manufacturercode, product.stock);
+		
 	}
 }
+
 
 int addnewproducts(void)
 {
 	float tempcost = 0;
 	int tempstock = 0;
-	/* Add a product to the productfile */
+	//Add a product to the productfile
 	PRODUCT product;
 	HEADER header;
 	
@@ -87,7 +93,7 @@ int addnewproducts(void)
 	FILE * pfd = fopen("productsrelativefile.txt", "r+");
 	
 	
-	/* Access header record to get first available product id */
+	//Access header record to get first available product id 
 	fseek(pfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, pfd);
 	
@@ -95,7 +101,7 @@ int addnewproducts(void)
 	fflush(stdin);
 	
 	printf("Enter name\n");
-	fgets(productr.name, MAXLEN, stdin);
+	fgets(product.name, MAXLEN, stdin);
 	TRUNCATE(product.name);
 	
 	printf("Enter classification\n");

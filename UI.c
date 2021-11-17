@@ -26,6 +26,7 @@ int main(void){
 		}
 		if(input == 3){
 			printf("Adding new products\n");
+			addnewproducts();
 			
 		}
 		if(input == 4){
