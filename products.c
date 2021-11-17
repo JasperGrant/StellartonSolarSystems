@@ -75,3 +75,63 @@ int readproducts(void){ //TODO
 	}
 }
 */
+int addnewproducts(void)
+{
+	/* Add a product to the productfile */
+	PRODUCT product;
+	HEADER header;
+	
+	
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	
+	
+	/* Access header record to get first available product id */
+	fseek(pfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, pfd);
+	
+	
+	fflush(stdin);
+	
+	printf("Enter name\n");
+	fgets(productr.name, MAXLEN, stdin);
+	TRUNCATE(product.name);
+	
+	printf("Enter classification\n");
+	fgets(product.classification, MAXLEN, stdin);
+	TRUNCATE(product.classification);
+	
+	printf("Enter manufacturer\n");
+	fgets(product.manufacturer, MAXLEN, stdin);
+	TRUNCATE(product.manufacturer);
+	
+	printf("Enter Unit Cost\n");
+	scanf("%d", &product.unitcost);
+	TRUNCATE(product.unitcost);
+	fflush(stdin);
+	
+	printf("Enter manufacturercode\n");
+	fgets(product.manufacturercode, MAXLEN, stdin);
+	TRUNCATE(product.manufacturercode);
+	
+	printf("Enter Stock\n");
+	scanf("%d", &product.unitcost);
+	//fgets(product.stock, MAXLEN, stdin);
+	TRUNCATE(product.stock);
+
+
+	fseek(pfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(PRODUCT), SEEK_SET);
+	product.PID = header.first_id;
+	fwrite(&product, sizeof(PRODUCT), 1, pfd);
+	
+	header.first_id++;
+	
+	fseek(pfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, pfd);
+	
+	fclose(pfd);
+	
+}
+
+
+
+
