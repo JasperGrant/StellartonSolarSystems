@@ -101,7 +101,7 @@ int addnewcustomers(void)
 	fread(&header, sizeof(HEADER), 1, cfd);
 	
 	
-	/* Geting all the information */
+	fflush(stdin);
 	
 	printf("Enter name\n");
 	fgets(customer.name, MAXLEN, stdin);
@@ -128,23 +128,17 @@ int addnewcustomers(void)
 	TRUNCATE(customer.postalcode);
 	
 	printf("Enter Telephone\n");
-	fgets(customer.postalcode, MAXLEN, stdin);
-	TRUNCATE(customer.postalcode);
+	fgets(customer.telephone, MAXLEN, stdin);
+	TRUNCATE(customer.telephone);
 	
-	
-	
-	/* Complete remaining fields */
-	/* Display complete record */
-	//printf("ID: >%d< Name: >%s< businessname: >%s< Province: >%s<  Town: >%s<  postal code: >%s<  telephone: >%s<\n", 
-	//	customer.CID, customer.name, customer.businessname, customer.province, customer.town, customer.postalcode, customer.telephone);
-	
-	
-	printf("\nID: %d\n", header.first_id);
+	//printf("\nID: %d\n", header.first_id);
 	fseek(cfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(CUSTOMER), SEEK_SET);
+	customer.CID = header.first_id;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
-	//printf("HELLO\n");
-	fseek(cfd, 0, SEEK_SET);
+	
 	header.first_id++;
+	
+	fseek(cfd, 0, SEEK_SET);
 	fwrite(&header, sizeof(HEADER), 1, cfd);
 	
 	fclose(cfd);
