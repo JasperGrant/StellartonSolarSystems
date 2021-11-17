@@ -7,7 +7,11 @@
 
 #include "relativefiles.h"
 
+<<<<<<<< Updated upstream:suppliers.c
 int initsuppliers(void){
+========
+int initproducts(void){
+>>>>>>>> Stashed changes:products.c
 
 	HEADER header;
 	
@@ -59,3 +63,27 @@ int initsuppliers(void){
 	return 0;
 	
 }
+<<<<<<<< Updated upstream:suppliers.c
+========
+
+int readproducts(void){
+	PRODUCT product;
+	HEADER header;
+	FILE * output = fopen("productsrelativefile.txt", "r+");
+	
+	fseek(output, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, output);
+	printf("Header: %ld\n", header.first_id);
+	for(int i = 0;i<header.first_id-1001; i++){
+		fseek(output, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, output);
+		//printf("%s\n", product.name);
+		
+		printf("Product: %s, %ld, %s, %s, %.2f, %s, %d\n", 
+		product.name, product.PID, product.classification, product.manufacturer, 
+		(float)product.unitcost/100, product.manufacturercode, product.stock);
+		
+	}
+}
+
+>>>>>>>> Stashed changes:products.c
