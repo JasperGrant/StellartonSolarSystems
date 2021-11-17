@@ -21,15 +21,18 @@ struct customer{
 typedef struct customer CUSTOMER;
 
 struct product{
+	long PID;
 	char name[MAXLEN];
-	char classificationn[MAXLEN];
+	char classification[MAXLEN];
 	char manufacturer[MAXLEN];
-	int unitcost[MAXLEN];
+	int unitcost;
 	char manufacturercode[MAXLEN];
 	int stock;
 };
+typedef struct product PRODUCT;
 
 struct supplier{
+	long SID;
 	char manufacturer[MAXLEN];
 	char contact[MAXLEN];
 	char company[MAXLEN];
@@ -37,6 +40,7 @@ struct supplier{
 	char telephone[MAXLEN];
 	
 };
+typedef struct supplier SUPPLIER;
 
 struct header
 {

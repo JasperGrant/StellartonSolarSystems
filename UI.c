@@ -33,6 +33,7 @@ int main(void){
 		if(input == 5){
 			printf("Initializing stores");
 			initcustomers();
+			initproducts();
 		}
 	}
 }

@@ -10,8 +10,8 @@
 int initcustomers(void){
 
 	HEADER header;
-
 	CUSTOMER customer;
+
 	char *element;
 	char temprecord[MAXREC];
 	
@@ -19,10 +19,7 @@ int initcustomers(void){
 	FILE * output = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
 
 	long customerid = header.first_id = 1001; //1001 is the first CID
-	
-	fseek(output, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, output);
-	
+
 	fgets(temprecord, MAXREC, input); //Disregard first line
 	
 	while (fgets(temprecord, MAXREC, input)){
