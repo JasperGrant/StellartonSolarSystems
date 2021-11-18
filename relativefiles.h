@@ -5,7 +5,8 @@
 #include <fcntl.h>
 #define NAMELEN 32
 #define MAXLEN 32
-#define MAXREC 256
+#define MAXREC 320
+#define LONGMAXLEN 64
 #define TRUNCATE(name) name[strlen(name)-1] = '\0'
 
 struct customer{
@@ -22,7 +23,7 @@ typedef struct customer CUSTOMER;
 
 struct product{
 	long PID;
-	char name[MAXLEN];
+	char name[LONGMAXLEN];
 	char classification[MAXLEN];
 	char manufacturer[MAXLEN];
 	int unitcost;
@@ -51,9 +52,9 @@ typedef struct header HEADER;
 struct sale{
 	long TID;
 	long CID;
-	char companyname[MAXLEN];
+	char name[MAXLEN];
 	long PID;
-	char productname[MAXLEN];
+	char productname[LONGMAXLEN];
 	int quantity;
 	int totalcost;
 };

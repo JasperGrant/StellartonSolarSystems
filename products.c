@@ -82,7 +82,7 @@ int readproducts(void){ //TODO
 
 int addnewproducts(void)
 {
-	char tempstring[MAXLEN];
+	char tempstring[LONGMAXLEN];
 	//Add a product to the productfile
 	PRODUCT product;
 	HEADER header;
