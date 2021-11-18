@@ -59,21 +59,18 @@ int addnewsales(void){
 	
 	sale.TID = header.first_id; 
 	
-	fseek(cfd, sizeof(HEADER) + (sale.CID-1)*sizeof(CUSTOMER), SEEK_SET);
+	fseek(cfd, sizeof(HEADER) + ((sale.CID-1000)*sizeof(CUSTOMER)), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 
-	fseek(pfd, sizeof(HEADER) + (sale.PID-1000)*sizeof(PRODUCT), SEEK_SET);
+	fseek(pfd, sizeof(HEADER) + ((sale.PID-1)*sizeof(PRODUCT)), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
-	
-	printf("quantity: %d", sale.quantity);
-	printf("stock: %d", product.stock);
 	
 	if(sale.quantity > product.stock){
 		printf("Sale impossible as quantity of item requested is greater then stock.\n");
 		return -1;
 	}
 	product.stock-=sale.quantity;
-	fseek(pfd, sizeof(HEADER) + (sale.PID-999)*sizeof(CUSTOMER), SEEK_SET);
+	fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
 	strcpy(sale.companyname, customer.businessname);
@@ -81,7 +78,7 @@ int addnewsales(void){
 	sale.totalcost = product.unitcost * sale.quantity;
 	
 	fseek(tfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, tfd);
+	fwrite(&sale, sizeof(SALE), 1, tfd);
 	
 	header.first_id++;
 	fseek(tfd, 0, SEEK_SET);
