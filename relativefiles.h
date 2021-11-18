@@ -72,5 +72,6 @@ int initsuppliers(void);
 int addnewsuppliers(void);
 int readsuppliers(void);
 
-int makesale(void);
 int initsales(void);
+int addnewsales(void);
+int readsales(void);

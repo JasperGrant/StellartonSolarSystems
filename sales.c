@@ -20,6 +20,22 @@ int initsales(void){
 	fclose(output);
 }
 
+int readsales(void){
+	SALE sale;
+	HEADER header;
+	FILE * output = fopen("salesrelativefile.txt", "r+");
+	
+	fseek(output, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, output);
+	printf("Header: %ld\n", header.first_id);
+	for(int i = 0;i<header.first_id-1; i++){
+		fseek(output, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+		fread(&sale, sizeof(SALE), 1, output);
+		printf("Sale: %ld, %ld: %s, %ld: %s, %d, %f\n", sale.TID, sale.CID, sale.companyname,
+		sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100);
+	}
+}
+
 int addnewsales(void){
 	
 	HEADER header;
@@ -53,6 +69,9 @@ int addnewsales(void){
 		printf("Sale impossible as quantity of item requested is greater then stock.\n");
 		return -1;
 	}
+	product.stock-=sale.quantity;
+	fseek(fseek(pfd, sizeof(HEADER) + (sale.PID-999)*sizeof(CUSTOMER), SEEK_SET);
+	fwrite(&product, sizeof(PRODUCT), 1, pfd);)
 	
 	strcpy(sale.companyname, customer.businessname);
 	strcpy(sale.productname, product.name);
@@ -71,6 +90,3 @@ int addnewsales(void){
 	
 }
 
-int readsales(void){
-	
-}
