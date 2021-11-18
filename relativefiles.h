@@ -64,7 +64,7 @@ int readproducts(void);
 
 int initsuppliers(void);
 int addnewsuppliers(void);
-int readproducts(void);
+int readsuppliers(void);
 
 int makesale(void);
 int initsales(void);
