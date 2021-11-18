@@ -42,18 +42,26 @@ struct supplier{
 };
 typedef struct supplier SUPPLIER;
 
-struct header
-{
+struct header{
 	long first_id; //First availible ID
 };
 typedef struct header HEADER;
+
+struct sale{
+	
+};
 
 
 
 int initcustomers(void);
 int addnewcustomers(void);
 int readcustomers(void);
+
 int initproducts(void);
 int addnewproducts(void);
 int addnewsuppliers(void);
+
+//Supplier functions here
+
 int makesale(void);
+int initsales(void);

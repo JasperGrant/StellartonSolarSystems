@@ -18,9 +18,9 @@ int initcustomers(void){
 	FILE * input = fopen("Customers.txt", "r");
 	FILE * output = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
 
-	long customerid = header.first_id = 1001; //1001 is the first CID
+	long customerid = header.first_id = 1000; //1000 is the first CID
 
-	fgets(temprecord, MAXREC, input); //Disregard first line
+	fgets(temprecord, MAXREC, input); //Disregard first line in input
 	
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
@@ -48,7 +48,7 @@ int initcustomers(void){
 		strcpy(customer.telephone, element);
 		
 		customerid++;
-		fseek(output, ((customer.CID - 1001) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
+		fseek(output, ((customer.CID - 1000) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&customer, sizeof(CUSTOMER), 1, output);
 	}
 	header.first_id = customerid;
@@ -70,7 +70,7 @@ int readcustomers(void){
 	fseek(output, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, output);
 	printf("Header: %ld\n", header.first_id);
-	for(int i = 0;i<header.first_id-1001; i++){
+	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(output, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, output);
 		printf("Customer: %s, %ld, %s, %s, %s, %s, %s, %s\n", 
@@ -129,7 +129,7 @@ int addnewcustomers(void)
 	TRUNCATE(customer.telephone);
 	
 	//printf("\nID: %d\n", header.first_id);
-	fseek(cfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(CUSTOMER), SEEK_SET);
+	fseek(cfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(CUSTOMER), SEEK_SET);
 	customer.CID = header.first_id;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
