@@ -9,14 +9,14 @@
 
 int initproducts(void){ //TODO
 
+	//Init structs
 	HEADER header;
-	
 	PRODUCT product;
 	
 	char *element;
 	char temprecord[MAXREC];
 	FILE * input = fopen("Product v2.txt", "r");
-	FILE * output = fopen("productsrelativefile.txt", _access("productsrelativefile.txt", 0) < 0 ? "w" : "r+");
+	FILE * pfd = fopen("productsrelativefile.txt", _access("productsrelativefile.txt", 0) < 0 ? "w" : "r+");
 	
 	
 	long productid = header.first_id = 1; //1 is the first PID
@@ -46,44 +46,49 @@ int initproducts(void){ //TODO
 		product.stock = atoi(element);
 		
 		productid++;
-		fseek(output, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);
-		fwrite(&product, sizeof(PRODUCT), 1, output);
+		fseek(pfd, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);
+		fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	}
 	header.first_id = productid;
-	fseek(output, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, output);
+	fseek(pfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, pfd);
+	
 	fclose(input);
-	fclose(output);
+	fclose(pfd);
 	
 	return 0;
 	
 }
 
-int readproducts(void){ //TODO
+int readproducts(void){
+	
+	//Init structs
 	PRODUCT product;
 	HEADER header;
-	FILE * output = fopen("productsrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
 	
-	fseek(output, 0, SEEK_SET);
-	fread(&header, sizeof(HEADER), 1, output);
-	printf("Header: %ld\n", header.first_id);
+	fseek(pfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, pfd);
+	printf("Next PID: %ld\n", header.first_id);
 	for(int i = 0;i<header.first_id-1; i++){
-		fseek(output, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
-		fread(&product, sizeof(PRODUCT), 1, output);
+		fseek(pfd, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, pfd);
 		//printf("%s\n", product.name);
 		
-		printf("Product: %s, %ld, %s, %s, %.2f, %s, %d\n", 
-		product.name, product.PID, product.classification, product.manufacturer, 
+		printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+		product.PID, product.name, product.classification, product.manufacturer, 
 		(float)product.unitcost/100, product.manufacturercode, product.stock);
 		
 	}
+	fclose(pfd);
 }
 
 
 int addnewproducts(void)
 {
 	char tempstring[LONGMAXLEN];
-	//Add a product to the productfile
+	
+	//Init structs
 	PRODUCT product;
 	HEADER header;
 	

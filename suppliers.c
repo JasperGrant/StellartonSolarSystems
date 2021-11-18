@@ -10,14 +10,14 @@
 
 int initsuppliers(void){
 
+	//Init structs
 	HEADER header;
-	
 	SUPPLIER supplier;
 	
 	char *element;
 	char temprecord[MAXREC];
 	FILE * input = fopen("Suppliers v2.txt", "r");
-	FILE * output = fopen("suppliersrelativefile.txt", _access("suppliersrelativefile.txt", 0) < 0 ? "w" : "r+");
+	FILE * sfd = fopen("suppliersrelativefile.txt", _access("suppliersrelativefile.txt", 0) < 0 ? "w" : "r+");
 	
 	
 	long supplierid = header.first_id = 1000; //1001 is the first PID
@@ -47,14 +47,15 @@ int initsuppliers(void){
 
 		
 		supplierid++;
-		fseek(output, ((supplier.SID - 1000) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);
-		fwrite(&supplier, sizeof(SUPPLIER), 1, output);
+		fseek(sfd, ((supplier.SID - 1000) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);
+		fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	}
 	header.first_id = supplierid;
-	fseek(output, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, output);
+	fseek(sfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, sfd);
+	
 	fclose(input);
-	fclose(output);
+	fclose(sfd);
 	
 	return 0;
 	
@@ -62,22 +63,22 @@ int initsuppliers(void){
 
 
 int readsuppliers(void){
+	//Init structs
 	SUPPLIER supplier;
 	HEADER header;
-	FILE * output = fopen("suppliersrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 	
-	fseek(output, 0, SEEK_SET);
-	fread(&header, sizeof(HEADER), 1, output);
-	printf("Header: %ld\n", header.first_id);
+	fseek(sfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, sfd);
+	printf("Next SID: %ld\n", header.first_id);
 	for(int i = 0;i<header.first_id-1000; i++){
-		fseek(output, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
-		fread(&supplier, sizeof(SUPPLIER), 1, output);
-		//printf("%s\n", supplier.name);
-		
-		printf("Supplier: %s, %ld, %s, %s, %s, %s, %s\n", supplier.manufacturer, supplier.SID, 
+		fseek(sfd, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
+		printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
 		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 		
 	}
+	fclose(sfd);
 }
 
 
@@ -85,7 +86,7 @@ int readsuppliers(void){
 
 int addnewsuppliers(void)
 {
-	/* Add a customer to the customerfile */
+	//Init structs
 	SUPPLIER supplier;
 	HEADER header;
 	

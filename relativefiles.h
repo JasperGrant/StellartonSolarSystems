@@ -3,12 +3,12 @@
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
-#define NAMELEN 32
-#define MAXLEN 32
-#define MAXREC 320
-#define LONGMAXLEN 64
-#define TRUNCATE(name) name[strlen(name)-1] = '\0'
+#define MAXLEN 32 //Used for standard 32 byte elements
+#define MAXREC 288 //Max length of entire structure
+#define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
+#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
 
+//Customer structure
 struct customer{
 	long CID;
 	char name[MAXLEN];
@@ -21,6 +21,7 @@ struct customer{
 };
 typedef struct customer CUSTOMER;
 
+//Product structure
 struct product{
 	long PID;
 	char name[LONGMAXLEN];
@@ -32,6 +33,7 @@ struct product{
 };
 typedef struct product PRODUCT;
 
+//Supplier structure
 struct supplier{
 	long SID;
 	char manufacturer[MAXLEN];
@@ -40,15 +42,16 @@ struct supplier{
 	char address[MAXLEN];
 	char telephone[MAXLEN];
 	char email[MAXLEN];
-	
 };
 typedef struct supplier SUPPLIER;
 
+//General header structure
 struct header{
 	long first_id; //First availible ID
 };
 typedef struct header HEADER;
 
+//Sale structure
 struct sale{
 	long TID;
 	long CID;
@@ -60,19 +63,22 @@ struct sale{
 };
 typedef struct sale SALE;
 
+//Customer functions
+extern int initcustomers(void);
+extern int addnewcustomers(void);
+extern int readcustomers(void);
 
-int initcustomers(void);
-int addnewcustomers(void);
-int readcustomers(void);
+//Product functions
+extern int initproducts(void);
+extern int addnewproducts(void);
+extern int readproducts(void);
 
-int initproducts(void);
-int addnewproducts(void);
-int readproducts(void);
+//Supplier functions
+extern int initsuppliers(void);
+extern int addnewsuppliers(void);
+extern int readsuppliers(void);
 
-int initsuppliers(void);
-int addnewsuppliers(void);
-int readsuppliers(void);
-
-int initsales(void);
-int addnewsales(void);
-int readsales(void);
+//Sales functions
+extern int initsales(void);
+extern int addnewsales(void);
+extern int readsales(void);
