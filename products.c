@@ -98,15 +98,15 @@ int addnewproducts(void)
 	
 	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	
-	printf("Enter name\n");
+	printf("Enter Name\n");
 	fgets(product.name, MAXLEN, stdin);
 	TRUNCATE(product.name);
 	
-	printf("Enter classification\n");
+	printf("Enter Classification\n");
 	fgets(product.classification, MAXLEN, stdin);
 	TRUNCATE(product.classification);
 	
-	printf("Enter manufacturer\n");
+	printf("Enter Manufacturer\n");
 	fgets(product.manufacturer, MAXLEN, stdin);
 	TRUNCATE(product.manufacturer);
 	
@@ -115,7 +115,7 @@ int addnewproducts(void)
 	fgets(tempstring, MAXLEN, stdin);
     product.unitcost = atof(tempstring)*100;
 	
-	printf("Enter manufacturercode\n");
+	printf("Enter Manufacturer Code\n");
 	fgets(product.manufacturercode, MAXLEN, stdin);
 	TRUNCATE(product.manufacturercode);
 	

@@ -38,6 +38,7 @@ struct supplier{
 	char company[MAXLEN];
 	char address[MAXLEN];
 	char telephone[MAXLEN];
+	char email[MAXLEN];
 	
 };
 typedef struct supplier SUPPLIER;

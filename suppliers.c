@@ -20,32 +20,34 @@ int initsuppliers(void){
 	FILE * output = fopen("suppliersrelativefile.txt", _access("suppliersrelativefile.txt", 0) < 0 ? "w" : "r+");
 	
 	
-	long suppid = header.first_id = 1001; //1001 is the first PID
+	long supplierid = header.first_id = 1000; //1001 is the first PID
 	
 	fgets(temprecord, MAXREC, input); //Disregard first line
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		supplier.SID = supplierid;
 		
-		element = strtok(temprecord, "\t\"$");
-		printf("%s\n", element);
+		element = strtok(temprecord, "\t\"");
 		strcpy(supplier.manufacturer, element);
 
-		element = strtok(NULL, "\t\"$");	
+		element = strtok(NULL, "\t\"");	
 		strcpy(supplier.contact, element);
 
-		element = strtok(NULL, "\t\"$");
+		element = strtok(NULL, "\t\"");
 		strcpy(supplier.company, element);
 		
-		element = strtok(NULL, "\t\"$");	
+		element = strtok(NULL, "\t\"");	
 		strcpy(supplier.address, element);
 		
-		element = strtok(NULL, "\t\"$");	
+		element = strtok(NULL, "\t\"");	
 		strcpy(supplier.telephone, element);
+		
+		element = strtok(NULL, "\t\"");
+		strcpy(supplier.email, element);
 
 		
 		supplierid++;
-		fseek(output, ((supplier.PID - 1001) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);
+		fseek(output, ((supplier.SID - 1000) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&supplier, sizeof(SUPPLIER), 1, output);
 	}
 	header.first_id = supplierid;
@@ -67,13 +69,13 @@ int readsuppliers(void){
 	fseek(output, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, output);
 	printf("Header: %ld\n", header.first_id);
-	for(int i = 0;i<header.first_id-1001; i++){
+	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(output, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 		fread(&supplier, sizeof(SUPPLIER), 1, output);
 		//printf("%s\n", supplier.name);
 		
-		printf("Supplier: %s, %ld, %s, %s, %s, %s\n", supplier.manufacturer, product.PID, 
-		supplier.contact, supplier.company, supplier.address, supplier.telephone);
+		printf("Supplier: %s, %ld, %s, %s, %s, %s, %s\n", supplier.manufacturer, supplier.SID, 
+		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 		
 	}
 }
@@ -98,32 +100,31 @@ int addnewsuppliers(void)
 	
 	fflush(stdin);
 	
-	printf("Enter Name\n");
-	fgets(supplier.name, MAXLEN, stdin);
-	TRUNCATE(supplier.name);
-	
-	printf("Enter Product Classification\n");
-	fgets(supplier.classification, MAXLEN, stdin);
-	TRUNCATE(supplier.classification);
-	
-	printf("Enter Contact Information\n");
+	printf("Enter Manufacturer\n");
 	fgets(supplier.manufacturer, MAXLEN, stdin);
 	TRUNCATE(supplier.manufacturer);
 	
-	printf("Enter the name of the Company\n");
-	fgets(supplier.unitcost, MAXLEN, stdin);
-	TRUNCATE(supplier.unitcost);
+	printf("Enter Supplier Contact\n");
+	fgets(supplier.contact, MAXLEN, stdin);
+	TRUNCATE(supplier.contact);
 	
-	printf("Enter the Address\n");
+	printf("Enter Company Name\n");
+	fgets(supplier.company, MAXLEN, stdin);
+	TRUNCATE(supplier.company);
+	
+	printf("Enter Supplier Address\n");
 	fgets(supplier.address, MAXLEN, stdin);
 	TRUNCATE(supplier.address);
 	
 	printf("Enter Telephone Number\n");
 	fgets(supplier.telephone, MAXLEN, stdin);
 	TRUNCATE(supplier.telephone);
+	
+	printf("Enter Supplier Email\n");
+	fgets(supplier.email, MAXLEN, stdin);
+	TRUNCATE(supplier.email);
 
-
-	fseek(pfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(SUPPLIER), SEEK_SET);
+	fseek(sfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(SUPPLIER), SEEK_SET);
 	supplier.SID = header.first_id;
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	

@@ -23,5 +23,5 @@ int initsales(void){
 int makesale(void){
 	printf("Enter Customer ID: ");
 	
-	printf("Enter Product ID: ")
+	printf("Enter Product ID: ");
 }
