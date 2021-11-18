@@ -81,6 +81,8 @@ int readproducts(void){
 		
 	}
 	fclose(pfd);
+	
+	return 0;
 }
 
 
@@ -127,10 +129,6 @@ int addnewproducts(void)
 	printf("Enter Stock\n");
 	fgets(tempstring, MAXLEN, stdin);
 	product.stock = atoi(tempstring);
-	//fgets(product.stock, MAXLEN, stdin);
-
-	
-
 
 	fseek(pfd, sizeof(HEADER) + (header.first_id-1) * sizeof(PRODUCT), SEEK_SET);
 	product.PID = header.first_id;
@@ -142,6 +140,8 @@ int addnewproducts(void)
 	fwrite(&header, sizeof(HEADER), 1, pfd);
 	
 	fclose(pfd);
+	
+	return 0;
 	
 }
 

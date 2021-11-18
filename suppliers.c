@@ -79,6 +79,8 @@ int readsuppliers(void){
 		
 	}
 	fclose(sfd);
+	
+	return 0;
 }
 
 
@@ -136,5 +138,6 @@ int addnewsuppliers(void)
 	
 	fclose(sfd);
 	
+	return 0;
 }
 

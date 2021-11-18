@@ -4,7 +4,6 @@
 #include <io.h>
 #include <fcntl.h>
 
-
 #include "relativefiles.h"
 
 int initsales(void){
@@ -21,6 +20,8 @@ int initsales(void){
 	
 	//Close relative file
 	fclose(tfd);
+	
+	return 0;
 }
 
 int readsales(void){
@@ -49,6 +50,8 @@ int readsales(void){
 	
 	//Close relative file
 	fclose(tfd);
+	
+	return 0;
 }
 
 int addnewsales(void){
@@ -118,5 +121,6 @@ int addnewsales(void){
 	fclose(pfd);
 	fclose(tfd);
 	
+	return 0;
 }
 

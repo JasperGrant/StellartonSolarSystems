@@ -4,7 +4,6 @@
 #include <io.h>
 #include <fcntl.h>
 
-
 #include "relativefiles.h"
 
 int initcustomers(void){
@@ -13,16 +12,20 @@ int initcustomers(void){
 	HEADER header;
 	CUSTOMER customer;
 
+	//Init intermediate files for data processing
 	char *element;
 	char temprecord[MAXREC];
 	
+	//Open files
 	FILE * input = fopen("Customers.txt", "r");
 	FILE * cfd = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
 
+	//Assign value to CID and header next CID
 	long customerid = header.first_id = 1000; //1000 is the first CID
 
 	fgets(temprecord, MAXREC, input); //Disregard first line in input
 	
+	//Split customer string into parts
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		customer.CID = customerid;
@@ -48,14 +51,18 @@ int initcustomers(void){
 		element = strtok(NULL, ",");	
 		strcpy(customer.telephone, element);
 		
+		//Increment CID and then write customer to relative file
 		customerid++;
 		fseek(cfd, ((customer.CID - 1000) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	}
+	
+	//Update next CID in header
 	header.first_id = customerid;
 	fseek(cfd, 0, SEEK_SET);
 	fwrite(&header, sizeof(HEADER), 1, cfd);
 	
+	//Close files
 	fclose(input);
 	fclose(cfd);
 	
@@ -69,11 +76,17 @@ int readcustomers(void){
 	CUSTOMER customer;
 	HEADER header;
 	
+	//Open relative file
 	FILE * cfd = fopen("customersrelativefile.txt", "r+");
 	
+	//Find next CID from header
 	fseek(cfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, cfd);
+	
+	//Print out next CID
 	printf("Next CID: %ld\n", header.first_id);
+	
+	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
@@ -81,7 +94,11 @@ int readcustomers(void){
 		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
 		customer.town, customer.province, customer.postalcode, customer.telephone);
 	}
+	
+	//Close files
 	fclose(cfd);
+	
+	return 0;
 }
 
 
@@ -94,7 +111,7 @@ int addnewcustomers(void)
 	CUSTOMER customer;
 	HEADER header;
 	
-	
+	//Open relative file
 	FILE * cfd = fopen("customersrelativefile.txt", "r+");
 	
 	
@@ -102,9 +119,10 @@ int addnewcustomers(void)
 	fseek(cfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, cfd);
 	
-	
+	//Flush input to allow use of fgets after scanf
 	fflush(stdin);
 	
+	//Prompt for elements of customer. TRUNCATE removes the \n characters
 	printf("Enter name\n");
 	fgets(customer.name, MAXLEN, stdin);
 	TRUNCATE(customer.name);
@@ -133,17 +151,24 @@ int addnewcustomers(void)
 	fgets(customer.telephone, MAXLEN, stdin);
 	TRUNCATE(customer.telephone);
 	
-	//printf("\nID: %d\n", header.first_id);
-	fseek(cfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(CUSTOMER), SEEK_SET);
+	//Assign CID value from header.first_id
 	customer.CID = header.first_id;
+	
+	//Write customer to relative file
+	fseek(cfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(CUSTOMER), SEEK_SET);
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
+	//Increment next CID in header by one
 	header.first_id++;
 	
+	//Updated header
 	fseek(cfd, 0, SEEK_SET);
 	fwrite(&header, sizeof(HEADER), 1, cfd);
 	
+	//Close relative file
 	fclose(cfd);
+	
+	return 0;
 	
 }
 
