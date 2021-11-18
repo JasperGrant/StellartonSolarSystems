@@ -19,15 +19,15 @@ int initproducts(void){ //TODO
 	FILE * output = fopen("productsrelativefile.txt", _access("productsrelativefile.txt", 0) < 0 ? "w" : "r+");
 	
 	
-	long productid = header.first_id = 1001; //1001 is the first PID
+	long productid = header.first_id = 1; //1 is the first PID
 	
-	fgets(temprecord, MAXREC, input); //Disregard first line
+	fgets(temprecord, MAXREC, input); //Disregard first line in input
+	
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		product.PID = productid;
 		
 		element = strtok(temprecord, "\t\"$");
-		printf("%s\n", element);
 		strcpy(product.name, element);
 
 		element = strtok(NULL, "\t\"$");	
@@ -37,7 +37,6 @@ int initproducts(void){ //TODO
 		strcpy(product.manufacturer, element);
 		
 		element = strtok(NULL, "\t\"$");	
-		//element[0] = '0';
 		product.unitcost = (int)atof(element)*100;
 
 		element = strtok(NULL, "\t\"$");	
@@ -47,7 +46,7 @@ int initproducts(void){ //TODO
 		product.stock = atoi(element);
 		
 		productid++;
-		fseek(output, ((product.PID - 1001) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);
+		fseek(output, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&product, sizeof(PRODUCT), 1, output);
 	}
 	header.first_id = productid;
@@ -68,7 +67,7 @@ int readproducts(void){ //TODO
 	fseek(output, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, output);
 	printf("Header: %ld\n", header.first_id);
-	for(int i = 0;i<header.first_id-1001; i++){
+	for(int i = 0;i<header.first_id-1; i++){
 		fseek(output, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 		fread(&product, sizeof(PRODUCT), 1, output);
 		//printf("%s\n", product.name);
@@ -83,8 +82,7 @@ int readproducts(void){ //TODO
 
 int addnewproducts(void)
 {
-	float tempcost = 0;
-	int tempstock = 0;
+	char tempstring[MAXLEN];
 	//Add a product to the productfile
 	PRODUCT product;
 	HEADER header;
@@ -98,7 +96,7 @@ int addnewproducts(void)
 	fread(&header, sizeof(HEADER), 1, pfd);
 	
 	
-	fflush(stdin);
+	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	
 	printf("Enter name\n");
 	fgets(product.name, MAXLEN, stdin);
@@ -114,23 +112,22 @@ int addnewproducts(void)
 	
 	
 	printf("Enter Unit Cost\n");
-	scanf("%f", tempcost);
-    product.unitcost = tempcost*100;
-	fflush(stdin);
+	fgets(tempstring, MAXLEN, stdin);
+    product.unitcost = atof(tempstring)*100;
 	
 	printf("Enter manufacturercode\n");
 	fgets(product.manufacturercode, MAXLEN, stdin);
 	TRUNCATE(product.manufacturercode);
 	
 	printf("Enter Stock\n");
-	scanf("%d", tempstock);
-	product.stock = tempstock;
+	fgets(tempstring, MAXLEN, stdin);
+	product.stock = atoi(tempstring);
 	//fgets(product.stock, MAXLEN, stdin);
 
 	
 
 
-	fseek(pfd, sizeof(HEADER) + (header.first_id-1001) * sizeof(PRODUCT), SEEK_SET);
+	fseek(pfd, sizeof(HEADER) + (header.first_id-1) * sizeof(PRODUCT), SEEK_SET);
 	product.PID = header.first_id;
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
