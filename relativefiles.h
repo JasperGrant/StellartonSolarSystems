@@ -60,9 +60,11 @@ int readcustomers(void);
 
 int initproducts(void);
 int addnewproducts(void);
-int addnewsuppliers(void);
+int readproducts(void);
 
-//Supplier functions here
+int initsuppliers(void);
+int addnewsuppliers(void);
+int readproducts(void);
 
 int makesale(void);
 int initsales(void);
