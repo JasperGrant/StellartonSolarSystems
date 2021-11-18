@@ -49,9 +49,15 @@ struct header{
 typedef struct header HEADER;
 
 struct sale{
-	
+	long TID;
+	long CID;
+	char companyname[MAXLEN];
+	long PID;
+	char productname[MAXLEN];
+	int quantity;
+	int totalcost;
 };
-
+typedef struct sale SALE;
 
 
 int initcustomers(void);
