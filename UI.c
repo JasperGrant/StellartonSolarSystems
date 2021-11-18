@@ -12,7 +12,7 @@ int main(void){
 	while(1){
 		readcustomers();
 		readproducts();
-		//readsuppliers();
+		readsuppliers();
 		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n5. Initialize customer, product and supplier stores\n0. Quit\n");
 		scanf("%d", &input);
 		if(input == 0){

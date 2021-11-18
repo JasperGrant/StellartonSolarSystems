@@ -90,7 +90,7 @@ int addnewsuppliers(void)
 	HEADER header;
 	
 	
-	FILE * sfd = fopen("supplierrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 	
 	
 	/* Access header record to get first available customer id */
