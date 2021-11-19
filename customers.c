@@ -8,11 +8,11 @@
 
 int initcustomers(void){
 
-	//Init structs
+	//Initialize structs
 	HEADER header;
 	CUSTOMER customer;
 
-	//Init intermediate files for data processing
+	//Initialize intermediate files for data processing
 	char *element;
 	char temprecord[MAXREC];
 	
@@ -25,7 +25,9 @@ int initcustomers(void){
 
 	fgets(temprecord, MAXREC, input); //Disregard first line in input
 	
-	//Split customer string into parts
+	/*read the infromation from the text file until end of file
+	use string token to extract each element
+	use strcpy to copy the extrcted element to the matching feild in the product structure*/
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		customer.CID = customerid;
