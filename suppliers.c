@@ -26,7 +26,7 @@ int initsuppliers(void){
 	long supplierid = header.first_id = 1000; //1001 is the first supplier id
 	
 	fgets(temprecord, MAXREC, input); //Disregard first line
-	//read the infromation from the text file until end of file
+	//read the information from the text file until end of file
 	//use string token to extract each element
 	//use strcpy to copy th extrcted element to the matching feild in the supplier structure
 	while (fgets(temprecord, MAXREC, input)){ 
@@ -53,7 +53,7 @@ int initsuppliers(void){
 		strcpy(supplier.email, element);
 
 		
-		supplierid++; //increament supplier id
+		supplierid++; //increment supplier id
 		fseek(sfd, ((supplier.SID - 1000) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);//move to the next record
 		fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);//write the information to the reletive file
 	}
@@ -74,7 +74,7 @@ int readsuppliers(void){
 	//Init structs
 	SUPPLIER supplier;
 	HEADER header;
-	// open product reltve file
+	// open product relatve file
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 	//access first available id
 	fseek(sfd, 0, SEEK_SET);
@@ -88,7 +88,7 @@ int readsuppliers(void){
 		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 		
 	}
-	//close reletive file
+	//close relative file
 	fclose(sfd);
 	
 	return 0;
@@ -114,7 +114,7 @@ int addnewsuppliers(void)
 	
 	fflush(stdin);//Flush input to allow use of fgets after scanf
 	
-	//promopt user to enter customer detail
+	//prompt user to enter customer detail
 	//truncate each element to add null at the end of each element
 	
 	printf("Enter Manufacturer\n");

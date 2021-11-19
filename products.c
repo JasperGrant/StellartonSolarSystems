@@ -50,9 +50,9 @@ int initproducts(void){ //TODO
 		element = strtok(NULL, "\t\"$");	
 		product.stock = atoi(element);
 		
-		productid++;//increament product id
+		productid++;//increment product id
 		fseek(pfd, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);//move to the next record
-		fwrite(&product, sizeof(PRODUCT), 1, pfd);//write the elments to the reletive file
+		fwrite(&product, sizeof(PRODUCT), 1, pfd);//write the elments to the relative file
 	}
 	header.first_id = productid;
 	fseek(pfd, 0, SEEK_SET);
@@ -70,7 +70,7 @@ int readproducts(void){
 	//Init structs
 	PRODUCT product;
 	HEADER header;
-	// open product reltve file
+	// open product relatve file
 	FILE * pfd = fopen("productsrelativefile.txt", "r+");
 	//access first available id
 	fseek(pfd, 0, SEEK_SET);
@@ -85,7 +85,7 @@ int readproducts(void){
 		product.PID, product.name, product.classification, product.manufacturer, 
 		(float)product.unitcost/100, product.manufacturercode, product.stock);	
 	}
-	//close reletive file
+	//close relative file
 	fclose(pfd);
 	
 	return 0;
@@ -111,7 +111,7 @@ int addnewproducts(void)
 	
 	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	
-	/*promopt user to enter customer detail
+	/*prompt user to enter customer detail
 	truncate each element to add null at the end of each element*/
 	
 	printf("Enter Name\n");
