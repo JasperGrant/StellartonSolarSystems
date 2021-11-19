@@ -70,7 +70,7 @@ int addnewsales(void){
 	SALE sale;
 	
 	//Open relative files
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");//Open customer relative file
+	FILE * cfd = fopen("customersrelativefile.txt", "r");//Open customer relative file
 	FILE * pfd = fopen("productsrelativefile.txt", "r+");//Open product relative file
 	FILE * tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
 	
