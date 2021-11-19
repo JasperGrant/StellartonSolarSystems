@@ -1,3 +1,10 @@
+/* 
+UI.c
+File containing main UI that allows users to select functions of the program.
+Date modified: 2021-11-19
+Authors: Jasper Grant B00829263, Rehan Khalid B00826127
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +64,7 @@ int main(void){
 				//Password protected to protect system
 				printf("Enter password: ");
 				scanf("%d", &input);
+				//Correct password is 1234
 				if(input == 1234){ //If correct password
 					printf("Initializing stores...\n");
 					initcustomers();
