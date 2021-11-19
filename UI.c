@@ -7,7 +7,9 @@
 #include "relativefiles.h"
 
 int main(void){
-	//_set_fmode_(_O_BINARY);
+	
+	//Set filemode as binary
+	_fmode = _O_BINARY;
 	
 	//function selection variable
 	int input;
