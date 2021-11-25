@@ -48,7 +48,7 @@ struct supplier{
 	char company[MAXLEN];
 	char address[MAXLEN];
 	char telephone[MAXLEN];
-	char email[MAXLEN];
+	char email[LONGMAXLEN];
 };
 typedef struct supplier SUPPLIER;
 
@@ -74,18 +74,20 @@ typedef struct sale SALE;
 extern int initcustomers(void);
 extern int addnewcustomers(void);
 extern int readcustomers(void);
-
+extern int lookupcustomer(void);
 //Product functions
 extern int initproducts(void);
 extern int addnewproducts(void);
 extern int readproducts(void);
+extern int lookupproduct(void);
 
 //Supplier functions
 extern int initsuppliers(void);
 extern int addnewsuppliers(void);
 extern int readsuppliers(void);
-
+extern int lookupsupplier(void);
 //Sales functions
 extern int initsales(void);
 extern int addnewsales(void);
 extern int readsales(void);
+

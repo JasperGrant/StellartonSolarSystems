@@ -51,7 +51,7 @@ int readsales(void){
 	for(int i = 0;i<header.first_id-1; i++){
 		fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 		fread(&sale, sizeof(SALE), 1, tfd);
-		printf("Sale: %ld, %ld: %s, %ld: %s, %d, %.2f\n", sale.TID, sale.CID, sale.name,
+		printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
 		sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
 	}
 	

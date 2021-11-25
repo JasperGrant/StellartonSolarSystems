@@ -160,6 +160,31 @@ int addnewproducts(void)
 	
 }
 
+int lookupproduct(void){
+	
+	char tempstring[MAXREC];
+	int productid1 = 0;
+	fflush(stdin); 
+	printf("Enter the ID of the product you want to look up\n");
+	fgets(tempstring, MAXLEN, stdin);
+	productid1 = atoi(tempstring);
+	
+	//Init structs
+	PRODUCT product;
+	HEADER header;
+	// open product relatve file
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+		fseek(pfd, (productid1-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, pfd);
+		printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+		product.PID, product.name, product.classification, product.manufacturer, 
+		(float)product.unitcost/100, product.manufacturercode, product.stock);	
+
+	//close relative file
+	fclose(pfd);
+	
+	return 0;
+}
 
 
 

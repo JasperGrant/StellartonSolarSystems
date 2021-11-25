@@ -1,17 +1,17 @@
 [Editor_0]
 <<<<<<< Updated upstream
-CursorCol=21
+CursorCol=16
 CursorRow=11
 =======
 CursorCol=21
 CursorRow=11
 >>>>>>> Stashed changes
-TopLine=1
+TopLine=12
 LeftChar=1
 [Editor_1]
-CursorCol=3
+CursorCol=4
 <<<<<<< Updated upstream
-CursorRow=26
+CursorRow=19
 TopLine=1
 =======
 CursorRow=13
@@ -19,17 +19,17 @@ TopLine=1
 >>>>>>> Stashed changes
 LeftChar=1
 [Editors]
-Order=0,2,3,4,5
-Focused=3
+Order=1,4,5,0,2,3
+Focused=-1
 [Editor_2]
 <<<<<<< Updated upstream
-CursorCol=75
+CursorCol=46
 CursorRow=26
-TopLine=120
+TopLine=1
 LeftChar=1
 [Editor_3]
-CursorCol=8
-CursorRow=114
+CursorCol=37
+CursorRow=124
 TopLine=121
 LeftChar=1
 [Editor_4]
@@ -38,9 +38,9 @@ CursorRow=6
 TopLine=74
 LeftChar=1
 [Editor_5]
-CursorCol=14
-CursorRow=22
-TopLine=63
+CursorCol=46
+CursorRow=54
+TopLine=36
 =======
 CursorCol=11
 CursorRow=141
@@ -61,4 +61,9 @@ CursorCol=14
 CursorRow=22
 TopLine=63
 >>>>>>> Stashed changes
+LeftChar=1
+[Editor_6]
+CursorCol=1
+CursorRow=1
+TopLine=1
 LeftChar=1
