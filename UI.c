@@ -120,6 +120,8 @@ int main(void){
 			    	    lookupsupplier();
 			    	    break;
 				}
+			case 11:
+				deletecustomer();
 		}
 	}
 }
