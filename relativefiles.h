@@ -55,6 +55,7 @@ typedef struct supplier SUPPLIER;
 
 //General header structure
 struct header{
+	long deleted_record; //Relative file pointer to most recent deleted record
 	long first_id; //First availible ID
 };
 typedef struct header HEADER;

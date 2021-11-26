@@ -213,7 +213,7 @@ int deletecustomer(void){
 	HEADER header;
 	
 	//Open relative file
-	FILE * cfd = fopen("customerrelativefile.txt", "r+");
+	FILE * cfd = fopen("customersrelativefile.txt", "r+");
 	
 	
 	//Prompt user for customer ID
@@ -222,23 +222,8 @@ int deletecustomer(void){
 	int input;
 	scanf("%d", &input);
 	
-	//long input = atoi(tempstring);
-	
-	//Read customer to find if already deleted
-	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-	fread(&customer, sizeof(CUSTOMER), 1 , cfd);
-	printf("Customer CID %d\n", input);
-	
-	//Quit if aleady deleted
-	if(customer.CID == 0){
-		printf("Customer already deleted\n");
-		return -1;
-	}
-	
 	//Change customer ID to 0 and then put info back in file.
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-	customer.CID = 0;
-	printf("Customer CID %d", customer.CID);
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	//Close relative file
