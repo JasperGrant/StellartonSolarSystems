@@ -108,17 +108,14 @@ int main(void){
 			    	case 1:
 			    		printf("Customer Lookup\n");
 			    		lookupcustomer();
-			    		break;
 			    	
 			    	case 2:
 			    		printf("Product Lookup\n");
 			    	    lookupproduct();
-			    	    break;
 			    	
 			    	case 3:
 			    		printf("Supplier Lookup\n");
 			    	    lookupsupplier();
-			    	    break;
 				}
 			case 11:
 				deletecustomer();

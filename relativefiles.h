@@ -13,9 +13,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define MAXLEN 32 //Used for standard 32 byte elements
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
-#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a new line 
-
-enum REC_STATUS {ACTIVE, DELETED};
+#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
 
 //Customer structure
 struct customer{

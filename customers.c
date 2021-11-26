@@ -191,8 +191,8 @@ int lookupcustomer(void){
 	CUSTOMER customer;
 	HEADER header;
 	// open supplier relatve file
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");
-		fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	FILE * cfd = fopen("customerrelativefile.txt", "r+");
+		fseek(cfd, (customerid-1001)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
 		printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
 		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
