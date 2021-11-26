@@ -117,6 +117,8 @@ int main(void){
 			    		printf("Supplier Lookup\n");
 			    	    lookupsupplier();
 				}
+			case 11:
+				deletecustomer();
 		}
 	}
 }

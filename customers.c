@@ -192,15 +192,56 @@ int lookupcustomer(void){
 	HEADER header;
 	// open supplier relatve file
 	FILE * cfd = fopen("customerrelativefile.txt", "r+");
-		fseek(cfd, (customerid-1001)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-		fread(&customer, sizeof(CUSTOMER), 1, cfd);
-		printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
-		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
-		customer.town, customer.province, customer.postalcode, customer.telephone);	
+	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fread(&customer, sizeof(CUSTOMER), 1, cfd);
+	printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
+	customer.CID, customer.name, customer.businessname, customer.streetaddress, 
+	customer.town, customer.province, customer.postalcode, customer.telephone);	
 
 	//close relative file
 	fclose(cfd);
 	
 	return 0;
+}
+
+int deletecustomer(void){
+	//Input variable
+	char tempstring[MAXREC];
+	
+	//Init structs
+	CUSTOMER customer;
+	HEADER header;
+	
+	//Open relative file
+	FILE * cfd = fopen("customerrelativefile.txt", "r+");
+	
+	
+	//Prompt user for customer ID
+	printf("Enter a CID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//long input = atoi(tempstring);
+	
+	//Read customer to find if already deleted
+	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fread(&customer, sizeof(CUSTOMER), 1 , cfd);
+	printf("Customer CID %d\n", input);
+	
+	//Quit if aleady deleted
+	if(customer.CID == 0){
+		printf("Customer already deleted\n");
+		return -1;
+	}
+	
+	//Change customer ID to 0 and then put info back in file.
+	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	customer.CID = 0;
+	printf("Customer CID %d", customer.CID);
+	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
+	
+	//Close relative file
+	fclose(cfd);
 }
 

@@ -14,6 +14,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
 #define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
+#define DELETED 0 //Represents deleted file when ID = 0
 
 //Customer structure
 struct customer{
@@ -75,6 +76,7 @@ extern int initcustomers(void);
 extern int addnewcustomers(void);
 extern int readcustomers(void);
 extern int lookupcustomer(void);
+int deletecustomer(void);
 //Product functions
 extern int initproducts(void);
 extern int addnewproducts(void);

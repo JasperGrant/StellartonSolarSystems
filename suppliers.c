@@ -163,7 +163,7 @@ int addnewsuppliers(void)
 }
 int lookupsupplier(void){
 	
-	char tempstring[MAXREC];
+	char *tempstring;
 	long supplierid = 0;
 	fflush(stdin); 
 	printf("Enter the Supplier ID you want to look up\n");
@@ -174,7 +174,7 @@ int lookupsupplier(void){
 	SUPPLIER supplier;
 	HEADER header;
 	// open supplier relatve file
-	FILE * sfd = fopen("supplierrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 		fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
