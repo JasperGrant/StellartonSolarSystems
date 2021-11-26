@@ -163,7 +163,7 @@ int addnewproducts(void)
 int lookupproduct(void){
 	
 	char tempstring[MAXREC];
-	int productid1 = 0;
+	int productid1;
 	fflush(stdin); 
 	printf("Enter the ID of the product you want to look up\n");
 	fgets(tempstring, MAXLEN, stdin);
