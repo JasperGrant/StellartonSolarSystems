@@ -161,30 +161,87 @@ int addnewsuppliers(void)
 	
 	return 0;
 }
-int lookupsupplier(void){
+int changesupplier(void){
+	
+	//open the supplier reletive file to read
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 	
 	char *tempstring;
-	long supplierid = 0;
+	long supplierid;
 	fflush(stdin); 
-	printf("Enter the Supplier ID you want to look up\n");
+	
+	printf("Enter the Supplier ID you want to change:\n");
 	fgets(tempstring, MAXLEN, stdin);
 	supplierid = atoi(tempstring);
+	fflush(stdin);
 	
-	//Init structs
+	//intialzing the structs
 	SUPPLIER supplier;
 	HEADER header;
-	// open supplier relatve file
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
-		fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
-		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
-		printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
-		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);	
+	
+	
+	int option;
+	printf("Select the feild you would like to change\n1.Manufacturer\n2.Contact\n3.Company Name\n4.Address\n5.Telephone\n6.Email\n");
+	scanf("%d", &option);
+
+	
+	
+	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
+	fflush(stdin);
+	
+		switch(option){
+			case 1:
+				printf("Enter Manufacturer\n");
+	            fgets(supplier.manufacturer, MAXLEN, stdin);
+	            TRUNCATE(supplier.manufacturer);
+		        break;
+				
+			case 2:
+				printf("Enter Supplier Contact\n");
+				fgets(supplier.contact, MAXLEN, stdin);
+				TRUNCATE(supplier.contact);
+				break;
+			
+			case 3:
+				printf("Enter Company Name\n");
+				fgets(supplier.company, MAXLEN, stdin);
+				TRUNCATE(supplier.company);
+				break;
+			
+			case 4:
+				printf("Enter Supplier Address\n");
+				fgets(supplier.address, MAXLEN, stdin);
+				TRUNCATE(supplier.address);
+				break;
+				
+			case 5:
+				printf("Enter Telephone Number\n");
+				fgets(supplier.telephone, MAXLEN, stdin);
+				TRUNCATE(supplier.telephone);
+				break;
+				
+			case 6:
+				printf("Enter Supplier Email\n");
+				fgets(supplier.email, MAXLEN, stdin);
+				TRUNCATE(supplier.email);
+				break;		
+		}
+	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
+	
+	
+	printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
+	supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);	
 
 	//close relative file
 	fclose(sfd);
 	
 	return 0;
 }
+
+
+
 
 
 
