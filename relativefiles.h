@@ -13,11 +13,14 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define MAXLEN 32 //Used for standard 32 byte elements
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
-#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
-#define DELETED 0 //Represents deleted file when ID = 0
+#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a '\n'
+
+//Enum to represent status of data element active or deleted
+enum STATUS{ ACTIVE = 1, DELETED = 0};
 
 //Customer structure
 struct customer{
+	enum STATUS status;
 	long CID;
 	char name[MAXLEN];
 	char businessname[MAXLEN];
@@ -26,11 +29,11 @@ struct customer{
 	char province[MAXLEN];
 	char postalcode[MAXLEN];
 	char telephone[MAXLEN];
-};
-typedef struct customer CUSTOMER;
+};typedef struct customer CUSTOMER;
 
 //Product structure
 struct product{
+	enum STATUS status;
 	long PID;
 	char name[LONGMAXLEN];
 	char classification[MAXLEN];
@@ -43,6 +46,7 @@ typedef struct product PRODUCT;
 
 //Supplier structure
 struct supplier{
+	enum STATUS status;
 	long SID;
 	char manufacturer[MAXLEN];
 	char contact[MAXLEN];
@@ -62,6 +66,7 @@ typedef struct header HEADER;
 
 //Sale structure
 struct sale{
+	enum STATUS status;
 	long TID;
 	long CID;
 	char name[MAXLEN];
@@ -78,6 +83,7 @@ extern int addnewcustomers(void);
 extern int readcustomers(void);
 extern int lookupcustomer(void);
 int deletecustomer(void);
+
 //Product functions
 extern int initproducts(void);
 extern int addnewproducts(void);

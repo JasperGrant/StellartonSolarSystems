@@ -38,6 +38,7 @@ int initcustomers(void){
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		customer.CID = customerid;
+		customer.status = ACTIVE;
 		
 		element = strtok(temprecord, ",");
 		strcpy(customer.name, element);
@@ -60,7 +61,6 @@ int initcustomers(void){
 		element = strtok(NULL, ",");	
 		strcpy(customer.telephone, element);
 		
-		//Increment CID and then write customer to relative file
 		customerid++;
 		fseek(cfd, ((customer.CID - 1000) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
@@ -99,9 +99,11 @@ int readcustomers(void){
 	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
-		printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
-		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
-		customer.town, customer.province, customer.postalcode, customer.telephone);
+		if(customer.status == ACTIVE){
+			printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
+			customer.CID, customer.name, customer.businessname, customer.streetaddress, 
+			customer.town, customer.province, customer.postalcode, customer.telephone);
+		}
 	}
 	
 	//Close files
@@ -156,6 +158,31 @@ int addnewcustomers(void)
 	printf("Enter Telephone\n");
 	fgets(customer.telephone, MAXLEN, stdin);
 	TRUNCATE(customer.telephone);
+	
+	//Set status to active
+	customer.status = ACTIVE;	
+	
+	//Iterate through loop until deleted element is found
+	for(int i = 0;i<header.first_id-1000; i++){
+		fread(&customer, sizeof(CUSTOMER), 1, cfd);
+		if(customer.status == DELETED){
+			printf("Hello");
+			//Assign CID
+			customer.CID = i + 1000;
+			customer.status = ACTIVE;
+			fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+			fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
+	
+			//Updated header
+			fseek(cfd, 0, SEEK_SET);
+			fwrite(&header, sizeof(HEADER), 1, cfd);
+			
+			//Close relative file
+			fclose(cfd);
+			
+			return 0;
+		}
+	}
 	
 	//Assign CID value from header.first_id
 	customer.CID = header.first_id;
@@ -224,6 +251,7 @@ int deletecustomer(void){
 	
 	//Change customer ID to 0 and then put info back in file.
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	customer.status = DELETED;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	//Close relative file
