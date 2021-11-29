@@ -26,7 +26,7 @@ int main(void){
 		
 		//Print initial welcome message and user options
 		printf("Welcome to the Stellarton Solar Systems Digital Storage System\n");
-		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n5. Initialize customer, product, supplier, and sales stores\n6. Display customer store\n7. Display product store\n8. Display supplier store\n9. Display sales store\n10. Look up\n0. Quit\n");
+		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n5. Initialize customer, product, supplier, and sales stores\n6. Display customer store\n7. Display product store\n8. Display supplier store\n9. Display sales store\n10. Update Information\n0. Quit\n");
 		
 		//Read user input
 		scanf("%d", &input);
@@ -100,25 +100,33 @@ int main(void){
 			
 			case 10:
 				//Sub menu
-			    printf("Select function:\n1. Look up a Customer\n2. Look up a Product\n3. Look up a Supplier\n");
+			    printf("Select function:\n1. Change a Customer Field\n2. Change a Product Field\n3. Change a Supplier Field\n");
 			    
 			    scanf("%d", &input2);
 			    
 			    switch(input2){
 			    	case 1:
-			    		printf("Customer Lookup\n");
-			    		lookupcustomer();
+			    		printf("Updating Customer Fields...\n");
+			    		changecustomers();
+			    		break;
 			    	
 			    	case 2:
-			    		printf("Product Lookup\n");
-			    	    lookupproduct();
+			    		printf("Updating Product Fields...\n");
+			    	    changeproducts();
+			    	    break;
 			    	
 			    	case 3:
-			    		printf("Supplier Lookup\n");
-			    	    lookupsupplier();
+			    		printf("Updating Supplier Fields...\n");
+			    	    changesuppliers();
+			    	    break;
 				}
+				break;
 			case 11:
-				deletecustomer();
+				deletecustomers();
+				break;
 		}
 	}
 }
+
+
+
