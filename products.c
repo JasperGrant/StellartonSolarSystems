@@ -160,76 +160,25 @@ int addnewproducts(void)
 	
 }
 
-int changeproduct(void){
-	//open product reletive file to read and write
-	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+int lookupproduct(void){
 	
-	char *tempstring;
-	long productid;
+	char tempstring[MAXREC];
+	int productid1 = 0;
 	fflush(stdin); 
-	
-	printf("Enter the Product ID you want to change:\n");
+	printf("Enter the ID of the product you want to look up\n");
 	fgets(tempstring, MAXLEN, stdin);
-	productid = atoi(tempstring);
-	fflush(stdin);
+	productid1 = atoi(tempstring);
 	
 	//Init structs
 	PRODUCT product;
 	HEADER header;
 	// open product relatve file
-	
-	int option;
-	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n");
-	scanf("%d", &option);
-	
-	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
-	fread(&product, sizeof(PRODUCT), 1, pfd);
-	fflush(stdin);
-	
-		switch(option){
-		case 1:
-			printf("Enter new Name\n");
-	        fgets(product.name, MAXLEN, stdin);
-	        TRUNCATE(product.name);
-	        break;
-			
-		case 2:
-			printf("Enter new Classification\n");
-			fgets(product.classification, MAXLEN, stdin);
-			TRUNCATE(product.classification);
-			break;
-		
-		case 3:
-			printf("Enter new Manufacturer\n");
-			fgets(product.manufacturer, MAXLEN, stdin);
-			TRUNCATE(product.manufacturer);
-			break;
-		
-		case 4:
-			printf("Enter new Unit Cost\n");
-	        fgets(tempstring, MAXLEN, stdin);
-    		product.unitcost = atof(tempstring)*100;
-			break;
-			
-		case 5:
-			printf("Enter new Manufacturer Code\n");
-			fgets(product.manufacturercode, MAXLEN, stdin);
-			TRUNCATE(product.manufacturercode);
-			break;
-			
-		case 6:
-			printf("Enter new Stock\n");
-			fgets(tempstring, MAXLEN, stdin);
-			product.stock = atoi(tempstring);
-			break;
-					
-	}
-	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
-	fwrite(&product, sizeof(PRODUCT), 1, pfd);
-	
-	printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
-	product.PID, product.name, product.classification, product.manufacturer, 
-	(float)product.unitcost/100, product.manufacturercode, product.stock);	
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+		fseek(pfd, (productid1-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, pfd);
+		printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+		product.PID, product.name, product.classification, product.manufacturer, 
+		(float)product.unitcost/100, product.manufacturercode, product.stock);	
 
 	//close relative file
 	fclose(pfd);
