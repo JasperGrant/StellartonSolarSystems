@@ -116,7 +116,7 @@ int readcustomers(void){
 int addnewcustomers(void)
 {
 	//Init structs
-	CUSTOMER customer;
+	CUSTOMER customer, existing_customer;
 	HEADER header;
 	
 	//Open relative file
@@ -164,8 +164,8 @@ int addnewcustomers(void)
 	
 	//Iterate through loop until deleted element is found
 	for(int i = 0;i<header.first_id-1000; i++){
-		fread(&customer, sizeof(CUSTOMER), 1, cfd);
-		if(customer.status == DELETED){
+		fread(&existing_customer, sizeof(CUSTOMER), 1, cfd);
+		if(existing_customer.status == DELETED){
 			printf("Hello");
 			//Assign CID
 			customer.CID = i + 1000;
