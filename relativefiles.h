@@ -83,7 +83,6 @@ typedef struct sale SALE;
 extern int initcustomers(void);
 extern int addnewcustomers(void);
 extern int readcustomers(void);
-extern int lookupcustomers(void);
 extern int deletecustomers(void);
 extern int changecustomers(void);
 
@@ -91,7 +90,6 @@ extern int changecustomers(void);
 extern int initproducts(void);
 extern int addnewproducts(void);
 extern int readproducts(void);
-extern int lookupproducts(void);
 extern int deleteproducts(void);
 extern int changeproducts(void);
 
@@ -99,7 +97,6 @@ extern int changeproducts(void);
 extern int initsuppliers(void);
 extern int addnewsuppliers(void);
 extern int readsuppliers(void);
-extern int lookupsuppliers(void);
 extern int deleteproducts(void);
 extern int changesuppliers(void);
 //Sales functions

@@ -204,32 +204,6 @@ int addnewcustomers(void)
 	
 }
 
-int lookupcustomers(void){
-	
-	char tempstring[MAXREC];
-	long customerid;
-	fflush(stdin); 
-	printf("Enter the customer ID you want to look up\n");
-	fgets(tempstring, MAXLEN, stdin);
-	customerid = atoi(tempstring);
-
-	//Init structs
-	CUSTOMER customer;
-	HEADER header;
-	// open supplier relatve file
-	FILE * cfd = fopen("customerrelativefile.txt", "r+");
-	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-	fread(&customer, sizeof(CUSTOMER), 1, cfd);
-	printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
-	customer.CID, customer.name, customer.businessname, customer.streetaddress, 
-	customer.town, customer.province, customer.postalcode, customer.telephone);	
-
-	//close relative file
-	fclose(cfd);
-	
-	return 0;
-}
-
 int deletecustomers(void){
 	//Input variable
 	char tempstring[MAXREC];

@@ -161,31 +161,6 @@ int addnewsuppliers(void)
 	
 	return 0;
 }
-int lookupsuppliers(void){
-	
-	char *tempstring;
-	long supplierid = 0;
-	fflush(stdin); 
-	printf("Enter the Supplier ID you want to look up\n");
-	fgets(tempstring, MAXLEN, stdin);
-	supplierid = atoi(tempstring);
-	
-	//Init structs
-	SUPPLIER supplier;
-	HEADER header;
-	// open supplier relatve file
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
-		fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
-		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
-		printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
-		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);	
-
-	//close relative file
-	fclose(sfd);
-	
-	return 0;
-}
-
 
 int changesuppliers(void){
 	
