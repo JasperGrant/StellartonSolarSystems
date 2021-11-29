@@ -205,25 +205,87 @@ int addnewcustomers(void)
 	
 }
 
-int lookupcustomer(void){
+int changecustomer(void){
 	
-	char tempstring[MAXREC];
+	//open the supplier reletive file to read
+	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	
+	char *tempstring;
 	long customerid;
 	fflush(stdin); 
-	printf("Enter the customer ID you want to look up\n");
+	
+	printf("Enter the customer ID you want to change:\n");
 	fgets(tempstring, MAXLEN, stdin);
 	customerid = atoi(tempstring);
-
-	//Init structs
+	fflush(stdin);
+	
+	//intialzing the structs
 	CUSTOMER customer;
 	HEADER header;
-	// open supplier relatve file
-	FILE * cfd = fopen("customerrelativefile.txt", "r+");
+	
+	
+	int option;
+	printf("Select the feild you would like to change\n1.Name\n2.businessname\n3.streetaddress\n4.Town\n5.Province\n6.Postal Code\n7.Telephone\n");
+	scanf("%d", &option);
+
+	
+	
 	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
+	fflush(stdin);
+	
+	switch(option){
+		case 1:
+			printf("Enter name\n");
+			fgets(customer.name, MAXLEN, stdin);
+			TRUNCATE(customer.name);
+		    break;
+				
+		case 2:
+			printf("Enter businessname\n");
+			fgets(customer.businessname, MAXLEN, stdin);
+			TRUNCATE(customer.businessname);
+			break;
+			
+		case 3:
+			printf("Enter street address\n");
+			fgets(customer.streetaddress, MAXLEN, stdin);
+			TRUNCATE(customer.streetaddress);
+			break;
+			
+		case 4:
+			printf("Enter town\n");
+			fgets(customer.town, MAXLEN, stdin);
+			TRUNCATE(customer.town);
+			break;
+				
+		case 5:
+			printf("Enter province\n");
+			fgets(customer.province, MAXLEN, stdin);
+			TRUNCATE(customer.province);
+			break;
+				
+		case 6:
+			printf("Enter postalcode\n");
+   			fgets(customer.postalcode, MAXLEN, stdin);
+			TRUNCATE(customer.postalcode);
+			break;
+		
+		case 7:
+			printf("Enter Telephone\n");
+			fgets(customer.telephone, MAXLEN, stdin);
+			TRUNCATE(customer.telephone);
+			break;
+			
+		}
+		
+	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
+	
+	
 	printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
-	customer.CID, customer.name, customer.businessname, customer.streetaddress, 
-	customer.town, customer.province, customer.postalcode, customer.telephone);	
+		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
+		customer.town, customer.province, customer.postalcode, customer.telephone); 
 
 	//close relative file
 	fclose(cfd);
