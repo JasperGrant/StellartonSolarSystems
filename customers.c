@@ -99,6 +99,7 @@ int readcustomers(void){
 	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
+		//Check if record is deleted
 		if(customer.status == ACTIVE){
 			printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
 			customer.CID, customer.name, customer.businessname, customer.streetaddress, 
@@ -168,13 +169,10 @@ int addnewcustomers(void)
 		if(existing_customer.status == DELETED){
 			//Assign CID
 			customer.CID = i + 1000;
-			customer.status = ACTIVE;
+			
+			//Write record
 			fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 			fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
-	
-			//Updated header
-			fseek(cfd, 0, SEEK_SET);
-			fwrite(&header, sizeof(HEADER), 1, cfd);
 			
 			//Close relative file
 			fclose(cfd);
@@ -182,7 +180,7 @@ int addnewcustomers(void)
 			return 0;
 		}
 	}
-	
+	//Only reaches this point if no deleted element was found
 	//Assign CID value from header.first_id
 	customer.CID = header.first_id;
 	
@@ -222,7 +220,7 @@ int deletecustomers(void){
 	int input;
 	scanf("%d", &input);
 	
-	//Change customer ID to 0 and then put info back in file.
+	//Change customer status to DELETED and then put empty record into file.
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	customer.status = DELETED;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);

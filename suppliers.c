@@ -39,6 +39,7 @@ int initsuppliers(void){
 	
 		TRUNCATE(temprecord);
 		supplier.SID = supplierid;
+		supplier.status = ACTIVE;
 		
 		element = strtok(temprecord, "\t\"");
 		strcpy(supplier.manufacturer, element);
@@ -90,9 +91,11 @@ int readsuppliers(void){
 	for(int i = 0;i<header.first_id-1000; i++){
 		fseek(sfd, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
-		printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
-		supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
-		
+		//Check if record is deleted
+		if(supplier.status == ACTIVE){
+			printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
+			supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
+		}
 	}
 	//close relative file
 	fclose(sfd);
@@ -106,21 +109,21 @@ int readsuppliers(void){
 int addnewsuppliers(void)
 {
 	//Initializing structs
-	SUPPLIER supplier;
+	SUPPLIER supplier, existing_supplier;
 	HEADER header;
 	
 	//open supplier reletive file for reading
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
 	
 	
-	/* Access header record to get first available customer id */
+	/* Access header record to get first available product id */
 	fseek(sfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, sfd);
 	
 	
 	fflush(stdin);//Flush input to allow use of fgets after scanf
 	
-	//prompt user to enter customer detail
+	//prompt user to enter product detail
 	//truncate each element to add null at the end of each element
 	
 	printf("Enter Manufacturer\n");
@@ -146,9 +149,33 @@ int addnewsuppliers(void)
 	printf("Enter Supplier Email\n");
 	fgets(supplier.email, MAXLEN, stdin);
 	TRUNCATE(supplier.email);
+	
+	//Set status to active
+	supplier.status = ACTIVE;
+
+	//Iterate through loop until deleted element is found
+	for(int i = 0;i<header.first_id-1000; i++){
+		fread(&existing_supplier, sizeof(SUPPLIER), 1, sfd);
+		if(existing_supplier.status == DELETED){
+			//Assign SID
+			supplier.SID = i + 1000;
+			
+			//Write record
+			fseek(sfd, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+			fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
+			
+			//Close relative file
+			fclose(sfd);
+			
+			return 0;
+		}
+	}
+	//Only reaches this point if no deleted element was found
+
+	//Assign SID value from header.first_id
+	supplier.SID = header.first_id;
 
 	fseek(sfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(SUPPLIER), SEEK_SET);
-	supplier.SID = header.first_id;
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
 	header.first_id++;//increament first available id
@@ -160,6 +187,33 @@ int addnewsuppliers(void)
 	fclose(sfd);
 	
 	return 0;
+}
+
+int deletesuppliers(void){
+	//Input variable
+	char tempstring[MAXREC];
+	
+	//Init structs
+	SUPPLIER supplier;
+	HEADER header;
+	
+	//Open relative file
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
+	
+	
+	//Prompt user for supplier ID
+	printf("Enter a SID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//Change supplier status to DELETED and then put empty record into file.
+	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	supplier.status = DELETED;
+	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
+	
+	//Close relative file
+	fclose(sfd);
 }
 
 int changesuppliers(void){

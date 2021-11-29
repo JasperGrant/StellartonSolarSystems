@@ -16,12 +16,12 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 int main(void){
 	
 	//Set filemode as binary
-	//_fmode = _O_BINARY;
+	_fmode = _O_BINARY;
 	
 	//function selection variable
 	int input, input2;
 	
-	//Loop continues to run as customer uses functions. Ends on a selection of Quit
+	//Loop continues to run as product uses functions. Ends on a selection of Quit
 	while(1){
 		
 		//Print initial welcome message and user options
@@ -124,6 +124,15 @@ int main(void){
 			case 11:
 				deletecustomers();
 				break;
+			case 12:
+				deleteproducts();
+			break;
+			case 13:
+				deletesuppliers();
+			break;
+			case 14:
+				deletesales();
+			break;
 		}
 	}
 }

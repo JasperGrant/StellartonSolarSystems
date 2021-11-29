@@ -51,8 +51,10 @@ int readsales(void){
 	for(int i = 0;i<header.first_id-1; i++){
 		fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 		fread(&sale, sizeof(SALE), 1, tfd);
-		printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
-		sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+		if(sale.status == ACTIVE){
+			printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+		}
 	}
 	
 	//Close relative file
@@ -67,7 +69,7 @@ int addnewsales(void){
 	HEADER header;
 	CUSTOMER customer;
 	PRODUCT product;
-	SALE sale;
+	SALE sale, existing_sale;
 	
 	//Open relative files
 	FILE * cfd = fopen("customersrelativefile.txt", "r");//Open customer relative file
@@ -87,6 +89,9 @@ int addnewsales(void){
 	fread(&header, sizeof(HEADER), 1, tfd);
 	sale.TID = header.first_id; 
 	
+	//Set sale status to active
+	sale.status = ACTIVE;
+		
 	//Access customer that goes with CID
 	fseek(cfd, sizeof(HEADER) + ((sale.CID-1000)*sizeof(CUSTOMER)), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
@@ -113,6 +118,26 @@ int addnewsales(void){
 	strcpy(sale.productname, product.name);
 	sale.totalcost = product.unitcost * sale.quantity;
 	
+	//Iterate through loop to find deleted element
+	for(int i = 0;i<header.first_id-1; i++){
+		fread(&existing_sale, sizeof(SALE), 1, cfd);
+		if(existing_sale.status == DELETED){
+			//Assign TID
+			sale.TID = i + 1;
+			//Set sale status to active
+			sale.status = ACTIVE;
+			//Write record
+			fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+			fwrite(&sale, sizeof(SALE), 1, tfd);
+			
+			//Close relative file
+			fclose(tfd);
+			
+			return 0;
+		}
+	}
+	//Only reaches this point if no deleted element was found
+	
 	//Write sale to relative file
 	fseek(tfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
 	fwrite(&sale, sizeof(SALE), 1, tfd);
@@ -131,3 +156,29 @@ int addnewsales(void){
 	return 0;
 }
 
+int deletesales(void){
+	//Input variable
+	char tempstring[MAXREC];
+	
+	//Init structs
+	SALE sale;
+	HEADER header;
+	
+	//Open relative file
+	FILE * tfd = fopen("salesrelativefile.txt", "r+");
+	
+	
+	//Prompt user for sales ID
+	printf("Enter a TID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//Change sale status to DELETED and then put empty record into file.
+	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+	sale.status = DELETED;
+	fwrite(&sale, sizeof(SALE), 1, tfd);
+	
+	//Close relative file
+	fclose(tfd);
+}

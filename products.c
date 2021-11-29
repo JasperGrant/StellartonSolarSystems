@@ -37,6 +37,7 @@ int initproducts(void){ //TODO
 	while (fgets(temprecord, MAXREC, input)){
 		TRUNCATE(temprecord);
 		product.PID = productid;
+		product.status = ACTIVE;
 		
 		element = strtok(temprecord, "\t\"$");
 		strcpy(product.name, element);
@@ -87,9 +88,12 @@ int readproducts(void){
 	for(int i = 0;i<header.first_id-1; i++){
 		fseek(pfd, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 		fread(&product, sizeof(PRODUCT), 1, pfd);
-		printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
-		product.PID, product.name, product.classification, product.manufacturer, 
-		(float)product.unitcost/100, product.manufacturercode, product.stock);	
+		//Check if record is deleted
+		if(product.status == ACTIVE){
+			printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+			product.PID, product.name, product.classification, product.manufacturer, 
+			(float)product.unitcost/100, product.manufacturercode, product.stock);	
+		}
 	}
 	//close relative file
 	fclose(pfd);
@@ -103,7 +107,7 @@ int addnewproducts(void)
 	char tempstring[LONGMAXLEN];
 	
 	//Init structs
-	PRODUCT product;
+	PRODUCT product, existing_product;
 	HEADER header;
 	
 	//open product relative file
@@ -117,7 +121,7 @@ int addnewproducts(void)
 	
 	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	
-	/*prompt user to enter customer detail
+	/*prompt user to enter product detail
 	truncate each element to add null at the end of each element*/
 	
 	printf("Enter Name\n");
@@ -144,12 +148,36 @@ int addnewproducts(void)
 	printf("Enter Stock\n");
 	fgets(tempstring, MAXLEN, stdin);
 	product.stock = atoi(tempstring);//converts the string argument str to an integer
+	
+	//Set status to active
+	product.status = ACTIVE;
+	
+	//Iterate through loop until deleted element is found
+	for(int i = 0;i<header.first_id-1; i++){
+		fread(&existing_product, sizeof(PRODUCT), 1, pfd);
+		if(existing_product.status == DELETED){
+			//Assign PID
+			product.PID = i + 1;
+			
+			//Write record
+			fseek(pfd, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+			fwrite(&product, sizeof(PRODUCT), 1, pfd);
+	
+			//Close relative file
+			fclose(pfd);
+			
+			return 0;
+		}
+	}
+	//Only reaches this point if no deleted element was found
+
+	//Assign PID value from header.first_id
+	product.PID = header.first_id;
 
 	fseek(pfd, sizeof(HEADER) + (header.first_id-1) * sizeof(PRODUCT), SEEK_SET);
-	product.PID = header.first_id;
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
-	header.first_id++;//increament first available id
+	header.first_id++;//increment first available id
 	
 	fseek(pfd, 0, SEEK_SET);//move to the header
 	fwrite(&header, sizeof(HEADER), 1, pfd);//write the updated first available id to the header
@@ -158,6 +186,32 @@ int addnewproducts(void)
 	
 	return 0;
 	
+}
+
+int deleteproducts(void){
+	//Input variable
+	char tempstring[MAXREC];
+	
+	//Init structs
+	PRODUCT product;
+	HEADER header;
+	
+	//Open relative file
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	
+	//Prompt user for product ID
+	printf("Enter a PID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//Change product status to DELETED and then put empty record into file.
+	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	product.status = DELETED;
+	fwrite(&product, sizeof(PRODUCT), 1, pfd);
+	
+	//Close relative file
+	fclose(pfd);
 }
 
 int changeproducts(void){

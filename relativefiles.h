@@ -16,10 +16,10 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
 
 //enum to tell whether a file has been deleted
-enum STATUS{ACTIVE, DELETED};
+enum STATUS{ACTIVE = 1, DELETED = 0};
 
 
-//Customer structure
+//product structure
 struct customer{
 	enum STATUS status;
 	long CID;
@@ -97,10 +97,11 @@ extern int changeproducts(void);
 extern int initsuppliers(void);
 extern int addnewsuppliers(void);
 extern int readsuppliers(void);
-extern int deleteproducts(void);
+extern int deletesuppliers(void);
 extern int changesuppliers(void);
 //Sales functions
 extern int initsales(void);
 extern int addnewsales(void);
 extern int readsales(void);
+extern int deletesales(void);
 
