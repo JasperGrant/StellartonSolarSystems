@@ -166,7 +166,6 @@ int addnewcustomers(void)
 	for(int i = 0;i<header.first_id-1000; i++){
 		fread(&existing_customer, sizeof(CUSTOMER), 1, cfd);
 		if(existing_customer.status == DELETED){
-			printf("Hello");
 			//Assign CID
 			customer.CID = i + 1000;
 			customer.status = ACTIVE;
