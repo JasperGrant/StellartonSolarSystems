@@ -184,7 +184,18 @@ int addnewcustomers(void)
 	
 }
 
-int deletecustomers(void){
+int userdeletecustomers(void){
+	//Prompt user for customer ID
+	printf("Enter a CID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//run delete function
+	deletecustomers(input);
+}
+
+int deletecustomers(int input){
 	//Input variable
 	char tempstring[MAXREC];
 	
@@ -195,19 +206,11 @@ int deletecustomers(void){
 	//Open relative file
 	FILE * cfd = fopen("customersrelativefile.txt", "r+");
 	
-	
-	//Prompt user for customer ID
-	printf("Enter a CID: ");
-	fflush(stdin);
-	int input;
-	scanf("%d", &input);
-	
-	
 	//Read customer values from file
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	
-	//Change customer status to DELETED and then put record into file.
+	//Change customer status to DELETED and then pu record into file.
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	customer.status = DELETED;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);

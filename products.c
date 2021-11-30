@@ -169,7 +169,18 @@ int addnewproducts(void)
 	
 }
 
-int deleteproducts(void){
+int userdeleteproducts(void){
+	//Prompt user for product ID
+	printf("Enter a PID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//run delete function
+	deleteproducts(input);
+}
+
+int deleteproducts(int input){
 	//Input variable
 	char tempstring[MAXREC];
 	
@@ -179,12 +190,6 @@ int deleteproducts(void){
 	
 	//Open relative file
 	FILE * pfd = fopen("productsrelativefile.txt", "r+");
-	
-	//Prompt user for product ID
-	printf("Enter a PID: ");
-	fflush(stdin);
-	int input;
-	scanf("%d", &input);
 	
 	//Read supplier values from file
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);

@@ -136,7 +136,18 @@ int addnewsales(void){
 	return 0;
 }
 
-int deletesales(void){
+int userdeletesales(void){
+	//Prompt user for sales ID
+	printf("Enter a TID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//run delete function
+	deletesales(input);
+}
+
+int deletesales(int input){
 	//Input variable
 	char tempstring[MAXREC];
 	
@@ -146,13 +157,6 @@ int deletesales(void){
 	
 	//Open relative file
 	FILE * tfd = fopen("salesrelativefile.txt", "r+");
-	
-	
-	//Prompt user for sales ID
-	printf("Enter a TID: ");
-	fflush(stdin);
-	int input;
-	scanf("%d", &input);
 	
 	//Read sales values from file
 	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);

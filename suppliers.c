@@ -170,7 +170,18 @@ int addnewsuppliers(void)
 	return 0;
 }
 
-int deletesuppliers(void){
+int userdeletesuppliers(void){
+	//Prompt user for supplier ID
+	printf("Enter a SID: ");
+	fflush(stdin);
+	int input;
+	scanf("%d", &input);
+	
+	//run delete function
+	deletesuppliers(input);
+}
+
+int deletesuppliers(int input){
 	//Input variable
 	char tempstring[MAXREC];
 	
@@ -180,13 +191,6 @@ int deletesuppliers(void){
 	
 	//Open relative file
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
-	
-	
-	//Prompt user for supplier ID
-	printf("Enter a SID: ");
-	fflush(stdin);
-	int input;
-	scanf("%d", &input);
 	
 	//Read supplier values from file
 	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);

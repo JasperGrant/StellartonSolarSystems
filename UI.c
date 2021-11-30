@@ -122,16 +122,16 @@ int main(void){
 				}
 				break;
 			case 11:
-				deletecustomers();
+				userdeletecustomers();
 				break;
 			case 12:
-				deleteproducts();
+				userdeleteproducts();
 			break;
 			case 13:
-				deletesuppliers();
+				userdeletesuppliers();
 			break;
 			case 14:
-				deletesales();
+				userdeletesales();
 			break;
 		}
 	}
