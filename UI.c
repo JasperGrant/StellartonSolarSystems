@@ -71,6 +71,7 @@ int main(void){
 					initproducts();
 					initsuppliers();
 					initsales();
+					initbackorders();
 				}
 				else{ //If wrong password
 					printf("Incorrect password, files not initialized\n");
