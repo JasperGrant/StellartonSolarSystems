@@ -29,7 +29,7 @@ TopLine=1
 LeftChar=1
 [Editors]
 Order=1,4,5,0,2,3
-Focused=4
+Focused=5
 [Editor_2]
 <<<<<<< Updated upstream
 CursorCol=18
@@ -43,9 +43,9 @@ TopLine=135
 LeftChar=1
 [Editor_4]
 <<<<<<< Updated upstream
-CursorCol=18
-CursorRow=173
-TopLine=169
+CursorCol=50
+CursorRow=210
+TopLine=199
 =======
 CursorCol=33
 CursorRow=188
@@ -53,9 +53,9 @@ TopLine=172
 >>>>>>> Stashed changes
 LeftChar=1
 [Editor_5]
-CursorCol=18
-CursorRow=128
-TopLine=95
+CursorCol=38
+CursorRow=159
+TopLine=135
 =======
 CursorCol=11
 CursorRow=141

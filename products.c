@@ -107,7 +107,7 @@ int addnewproducts(void)
 	char tempstring[LONGMAXLEN];
 	
 	//Init structs
-	PRODUCT product, existing_product;
+	PRODUCT product;
 	HEADER header;
 	
 	//open product relative file
@@ -151,25 +151,6 @@ int addnewproducts(void)
 	
 	//Set status to active
 	product.status = ACTIVE;
-	
-	//Iterate through loop until deleted element is found
-	for(int i = 0;i<header.first_id-1; i++){
-		fread(&existing_product, sizeof(PRODUCT), 1, pfd);
-		if(existing_product.status == DELETED){
-			//Assign PID
-			product.PID = i + 1;
-			
-			//Write record
-			fseek(pfd, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
-			fwrite(&product, sizeof(PRODUCT), 1, pfd);
-	
-			//Close relative file
-			fclose(pfd);
-			
-			return 0;
-		}
-	}
-	//Only reaches this point if no deleted element was found
 
 	//Assign PID value from header.first_id
 	product.PID = header.first_id;
@@ -205,7 +186,11 @@ int deleteproducts(void){
 	int input;
 	scanf("%d", &input);
 	
-	//Change product status to DELETED and then put empty record into file.
+	//Read supplier values from file
+	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fread(&product, sizeof(PRODUCT), 1, pfd);
+	
+	//Change product status to DELETED and then put record into file.
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	product.status = DELETED;
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);

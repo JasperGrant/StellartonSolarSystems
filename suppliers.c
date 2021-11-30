@@ -109,7 +109,7 @@ int readsuppliers(void){
 int addnewsuppliers(void)
 {
 	//Initializing structs
-	SUPPLIER supplier, existing_supplier;
+	SUPPLIER supplier;
 	HEADER header;
 	
 	//open supplier reletive file for reading
@@ -153,25 +153,6 @@ int addnewsuppliers(void)
 	//Set status to active
 	supplier.status = ACTIVE;
 
-	//Iterate through loop until deleted element is found
-	for(int i = 0;i<header.first_id-1000; i++){
-		fread(&existing_supplier, sizeof(SUPPLIER), 1, sfd);
-		if(existing_supplier.status == DELETED){
-			//Assign SID
-			supplier.SID = i + 1000;
-			
-			//Write record
-			fseek(sfd, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
-			fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
-			
-			//Close relative file
-			fclose(sfd);
-			
-			return 0;
-		}
-	}
-	//Only reaches this point if no deleted element was found
-
 	//Assign SID value from header.first_id
 	supplier.SID = header.first_id;
 
@@ -207,7 +188,11 @@ int deletesuppliers(void){
 	int input;
 	scanf("%d", &input);
 	
-	//Change supplier status to DELETED and then put empty record into file.
+	//Read supplier values from file
+	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
+	
+	//Change supplier status to DELETED and then put record into file.
 	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	supplier.status = DELETED;
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
