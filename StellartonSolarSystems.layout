@@ -4,8 +4,8 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=7
-CursorRow=87
+CursorCol=1
+CursorRow=95
 =======
 CursorCol=8
 CursorRow=113
@@ -48,10 +48,10 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=22
+CursorCol=2
 <<<<<<< Updated upstream
-CursorRow=104
-TopLine=28
+CursorRow=46
+TopLine=13
 =======
 CursorCol=22
 <<<<<<< Updated upstream
@@ -79,24 +79,24 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-Order=0,1,4,5,2,3
+Order=1,4,5,0,2,3,6
 Focused=5
 [Editor_2]
 <<<<<<< Updated upstream
-CursorCol=13
-CursorRow=259
-TopLine=259
+CursorCol=19
+CursorRow=12
+TopLine=1
 LeftChar=1
 [Editor_3]
-CursorCol=84
-CursorRow=96
-TopLine=85
+CursorCol=33
+CursorRow=43
+TopLine=32
 LeftChar=1
 [Editor_4]
 <<<<<<< Updated upstream
-CursorCol=2
-CursorRow=193
-TopLine=149
+CursorCol=20
+CursorRow=9
+TopLine=7
 =======
 Order=1,4,5,0,2,3
 Focused=5
@@ -165,9 +165,9 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=1
-CursorRow=312
-TopLine=291
+CursorCol=8
+CursorRow=287
+TopLine=271
 =======
 CursorCol=23
 CursorRow=140
