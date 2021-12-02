@@ -88,6 +88,7 @@ int addnewsales(void){
 	CUSTOMER customer;
 	PRODUCT product;
 	SALE sale;
+
 	
 	//Open relative files
 	FILE * cfd = fopen("customersrelativefile.txt", "r");//Open customer relative file
@@ -301,7 +302,23 @@ int initdailyorders(void){
 	return 0;
 }
 
+int paymentdue(void){
+	//Initialize filename string for 30 days ago ORDERS file
+	char * pastfilename;
+	//Initialize command to copy and rename ORDERS file
+	char * command;
+	//Fill filename with string
+	sprintf(pastfilename, "ORDERS%d", globaldate-30);
+	if(access(pastfilename,F_OK) == 0){
+		char * filename;
+		sprintf(filename, "PAY_DUE%d", globaldate);
+		//Used to format shell command: cp ORDERS(date-30) PAY_DUE(date)
+		sprintf(command, "cp %s %s", pastfilename, filename);
+		//execute copy command
+		system(command);
+	}
 
+}
 
 
 

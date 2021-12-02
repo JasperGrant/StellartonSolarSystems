@@ -41,7 +41,8 @@ int main(void){
 	//Copy input string to global string
 	strcpy(globaldatestring, datestring);
 	
-	
+	//Generate 30 day payment reminders
+	paymentdue();
 	
 	//Loop continues to run as product uses functions. Ends on a selection of Quit
 	while(1){

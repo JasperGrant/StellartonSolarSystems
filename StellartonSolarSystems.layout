@@ -4,8 +4,13 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 CursorCol=1
 CursorRow=95
+=======
+CursorCol=21
+CursorRow=74
+>>>>>>> Stashed changes
 =======
 CursorCol=8
 CursorRow=113
@@ -30,7 +35,11 @@ CursorRow=11
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 TopLine=71
+=======
+TopLine=65
+>>>>>>> Stashed changes
 =======
 TopLine=84
 >>>>>>> Stashed changes
@@ -165,9 +174,15 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 CursorCol=8
 CursorRow=287
 TopLine=271
+=======
+CursorCol=10
+CursorRow=300
+TopLine=268
+>>>>>>> Stashed changes
 =======
 CursorCol=23
 CursorRow=140
