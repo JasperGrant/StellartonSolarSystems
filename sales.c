@@ -222,10 +222,9 @@ int readbackorders(void){
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1; i++){
-		fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
-			printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			printf("Backorder: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
 			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
 		}
 	}
@@ -285,7 +284,9 @@ int dailyorder(int input){
 	return 0;
 	
 }
+
 */
+
 int initdailyorders(void){
 	
 	FILE * dfd = fopen("dailyordersrelativefile.txt","w");
@@ -325,9 +326,86 @@ int paymentdue(void){
 
 }
 
+int fillbackorders(void){
+	//Prompt user for products which has a filled order and quantity
+	int inputID, inputQuantity;
+	printf("Enter PID of product with filled order:\n");
+	scanf("%d", &inputID);
+	printf("Enter Quantity of items filled:\n");
+	scanf("%d", &inputQuantity);
+	//Init structs
+	SALE sale;
+	HEADER header;
+	PRODUCT product;
+	
+	//Open relative files
+	FILE * tfd = fopen("backordersrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	char filename[MAXLEN];
+	sprintf(filename, "ORDERSFILLED%d", globaldate);
+	FILE * ordersfilled = fopen(filename, "a");
+	
+	//Find first_id from header
+	fseek(tfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, tfd);
+	
+	//Go through loop moving seeking and reading each element and then if that element mataches the PID and is not deleted printing to daily ORDERSFILLED
+	for(int i = 0;i<header.first_id-1; i++){
+		fread(&sale, sizeof(SALE), 1, tfd);
+		if((sale.status == ACTIVE) && (sale.PID == inputID)){
+			fprintf(ordersfilled, "Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+			deletebackorders(inputID);
+			//For every applicable item remove from inputted quantiy the quantity of that order
+			inputQuantity-=sale.quantity;
+			if(inputQuantity<0){
+				printf("Error too little quantity to fill all orders.\n");
+				break;
+			}
+		}
+	}
+	
+	//inputQuantity now reflects what should be added to the system after orders are filled.
+	//Read product
+	fseek(pfd, sizeof(HEADER) + (inputID-1)*sizeof(PRODUCT), SEEK_SET);
+	fread(&product, sizeof(PRODUCT), 1, pfd);
+	//Update stock
+	product.stock+= inputQuantity;
+	//Write product
+	fseek(pfd, sizeof(HEADER) + (inputID-1)*sizeof(PRODUCT), SEEK_SET);
+	fwrite(&product, sizeof(PRODUCT), 1, pfd);
+	
+	//Close relative file
+	fclose(tfd);
+	fclose(pfd);
+	
+	return 0;
+	
+}
 
-
-
+int deletebackorders(int input){
+	//Input variable
+	char tempstring[MAXREC];
+	
+	//Init structs
+	SALE sale;
+	HEADER header;
+	
+	//Open relative file
+	FILE * tfd = fopen("backordersrelativefile.txt", "r+");
+	
+	//Read backorders values from file
+	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+	fread(&sale, sizeof(SALE), 1, tfd);
+	
+	//Change backorder status to DELETED and then put record into file.
+	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+	sale.status = DELETED;
+	fwrite(&sale, sizeof(SALE), 1, tfd);
+	
+	//Close relative file
+	fclose(tfd);
+}
 
 
 

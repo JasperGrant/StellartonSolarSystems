@@ -124,10 +124,11 @@ extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
 extern int readbackorders(void);
+extern int paymentdue(void);
+extern int fillbackorders(void);
+extern int deletebackorders(int input);
 
 //Date functions
 int datestringtoint(char * string);
 
-//Payment Due Functions
-int paymentdue(void);
 
