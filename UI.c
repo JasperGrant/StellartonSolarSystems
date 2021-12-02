@@ -161,6 +161,13 @@ int main(void){
 			case 14:
 				userdeletesales();
 			break;
+			
+			
+			
+			
+			case 17:
+				fillbackorders();
+			break;
 		}
 	}
 }
