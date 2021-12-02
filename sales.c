@@ -271,10 +271,6 @@ int dailyorder(int input){
 }
 
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file
 	char pastfilename[32];
