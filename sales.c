@@ -13,7 +13,9 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+//Global date variables
 extern int globaldate;
+extern char globaldatestring[11];
 
 int initsales(void){
 	
@@ -117,7 +119,7 @@ int addnewsales(void){
 	if(sale.quantity == product.stock){
 		deleteproducts(sale.PID);
 		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
-		//dailyorder(sale.PID);
+		dailyorders(sale.PID);
 	}
 	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
 	else if(sale.quantity > product.stock){
@@ -235,13 +237,13 @@ int readbackorders(void){
 	
 	return 0;
 }
-/*
-int dailyorder(int input){
+
+int dailyorders(int input){
 	//intialize all structures needed
 	PRODUCT product;
 	SUPPLIER supplier;
-	DAILYORDER dailyorder;
-	HEADER header;//to store the daily order id 
+	
+	printf("1\n");
 	
 	int check;
 	long supplierid;
@@ -249,60 +251,31 @@ int dailyorder(int input){
 	FILE * pfd = fopen("productsrelativefile.txt", "r");
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r");
 	//open daily order reletive file to write to jasper has to do the changing file names according to the date
-	FILE * dfd = fopen("dailyordersrelativefile.txt", "r+");
+	printf("2\n");
+	char filename[32];
+	sprintf(filename, "ORDERS%d", globaldate);
+
+	FILE * dfd = fopen(filename, "a");
+	
+	printf("3\n");
 	
 	//fseek to the relvant product id 
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	//fread the product stuff into structure
 	fread(&product, sizeof(PRODUCT), 1, pfd);
-	
-	//find supplier using the manufacturer
+
+	//find supplier using the manufacturer and place the file pointer at the start of the records in the supplier file
+	fseek(sfd, sizeof(HEADER), SEEK_SET);
 	while(check!= 0){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		check = strcmp(product.manufacturer, supplier.manufacturer);
 	}
-	
-	//copy supplier info into dailyorder 
-	strcpy(dailyorder.productid, product.PID);
-	strcpy(dailyorder.classification, product.classification);
-	strcpy(dailyorder.manufacturercode, product.manufacturercode);
-	strcpy(dailyorder.suppliercontact, supplier.contact);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	
-	//Write sale to relative file
-	fseek(dfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
-	fwrite(&dailyorder, sizeof(DAILYORDER), 1, dfd);
-		
-	header.first_id++;//Increment availible ID by 1
-		
-	//Write new first_id to header
-	fseek(dfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, dfd);
-	
-	fclose(dfd);
-	return 0;
-	
-}
-*/
-int initdailyorders(void){
-	
-	FILE * dfd = fopen("dailyordersrelativefile.txt","w");
-	
-	//Init structs
-	HEADER header;
-	header.first_id = 1;
-	
-	//Write header
-	fseek(dfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, dfd);
-	
-	//Close relative file
+	//print the daily order to the text file ORDERS with encoded date
+	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, Quantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
 	fclose(dfd);
 	
-	return 0;
 }
+
 
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file

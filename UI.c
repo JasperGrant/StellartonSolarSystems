@@ -14,8 +14,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include "relativefiles.h"
 
 //Global date variables
-int globaldate;
-char globaldatestring[11];
+extern int globaldate;
+extern char globaldatestring[11];
 
 int main(void){
 	

@@ -82,17 +82,6 @@ struct sale{
 };
 typedef struct sale SALE;
 
-struct dailyorder{
-	char date[datelen];
-	long productid;
-	char classification[MAXLEN];
-	char manufacturercode[MAXLEN];
-	char suppliercontact[MAXLEN];
-	char suppliertelephone[MAXLEN];
-	char supplieremail[LONGMAXLEN];
-};
-typedef struct dailyorder DAILYORDER;
-
 //Customer functions
 extern int initcustomers(void);
 extern int addnewcustomers(void);
@@ -124,10 +113,13 @@ extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
 extern int readbackorders(void);
-
+extern int dailyorders(int input);
 //Date functions
 int datestringtoint(char * string);
 
 //Payment Due Functions
 int paymentdue(void);
 
+//Global date variables
+int globaldate;
+char globaldatestring[11];

@@ -100,7 +100,7 @@ int readcustomers(void){
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
 		//Check if record is deleted
 		if(customer.status == ACTIVE){
-			printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
+			printf("Customer ID: %ld\nName: %s\nBusiness Name: %s\nStreet Address: %s\nTown: %s\nProvince: %s\nPostal Code: %s\nTelephone: %s\n\n\n", 
 			customer.CID, customer.name, customer.businessname, customer.streetaddress, 
 			customer.town, customer.province, customer.postalcode, customer.telephone);
 		}

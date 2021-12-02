@@ -92,7 +92,7 @@ int readsuppliers(void){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		//Check if record is deleted
 		if(supplier.status == ACTIVE){
-			printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
+			printf("Supplier ID: %ld\nManufacturer: %s\nContact: %s\nCompany: %s\nAddress: %s\nTelephone: %s\nEmail: %s\n\n\n", supplier.SID, supplier.manufacturer, 
 			supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 		}
 	}
