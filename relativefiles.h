@@ -131,4 +131,5 @@ extern int deletebackorders(int input);
 //Date functions
 int datestringtoint(char * string);
 
-
+int globaldate;
+char globaldatestring[11];

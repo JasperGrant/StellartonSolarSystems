@@ -14,6 +14,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include "relativefiles.h"
 
 extern int globaldate;
+extern char globaldatestring[11];
 
 int initsales(void){
 	
@@ -286,24 +287,6 @@ int dailyorder(int input){
 }
 
 */
-
-int initdailyorders(void){
-	
-	FILE * dfd = fopen("dailyordersrelativefile.txt","w");
-	
-	//Init structs
-	HEADER header;
-	header.first_id = 1;
-	
-	//Write header
-	fseek(dfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, dfd);
-	
-	//Close relative file
-	fclose(dfd);
-	
-	return 0;
-}
 
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file

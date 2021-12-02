@@ -5,8 +5,8 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=33
-CursorRow=116
+CursorCol=1
+CursorRow=134
 =======
 CursorCol=21
 CursorRow=74
@@ -36,7 +36,7 @@ CursorRow=11
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-TopLine=90
+TopLine=93
 =======
 TopLine=65
 >>>>>>> Stashed changes
@@ -57,10 +57,10 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=2
+CursorCol=11
 <<<<<<< Updated upstream
-CursorRow=46
-TopLine=136
+CursorRow=154
+TopLine=126
 =======
 CursorCol=22
 <<<<<<< Updated upstream
@@ -83,29 +83,29 @@ TopLine=92
 CursorRow=13
 TopLine=1
 >>>>>>> Stashed changes
-LeftChar=1
+LeftChar=3
 [Editors]
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-Order=1,4,5,0,2,3,6
+Order=4,6,3,0,5,2
 Focused=5
 [Editor_2]
 <<<<<<< Updated upstream
-CursorCol=110
-CursorRow=64
-TopLine=50
+CursorCol=19
+CursorRow=12
+TopLine=1
 LeftChar=1
 [Editor_3]
-CursorCol=1
-CursorRow=105
-TopLine=189
+CursorCol=2
+CursorRow=117
+TopLine=101
 LeftChar=1
 [Editor_4]
 <<<<<<< Updated upstream
 CursorCol=20
 CursorRow=9
-TopLine=1
+TopLine=52
 =======
 Order=1,4,5,0,2,3
 Focused=5
@@ -175,9 +175,9 @@ LeftChar=1
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-CursorCol=39
-CursorRow=270
-TopLine=262
+CursorCol=1
+CursorRow=412
+TopLine=372
 =======
 CursorCol=10
 CursorRow=300
@@ -202,7 +202,7 @@ TopLine=129
 CursorCol=11
 CursorRow=141
 TopLine=49
-LeftChar=38
+LeftChar=1
 [Editor_3]
 CursorCol=1
 CursorRow=132
@@ -222,5 +222,5 @@ LeftChar=1
 [Editor_6]
 CursorCol=46
 CursorRow=31
-TopLine=2
+TopLine=1
 LeftChar=1
