@@ -126,8 +126,12 @@ extern int initbackorders(void);
 extern int readbackorders(void);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 //Date functions
 int datestringtoint(char * string);
+=======
+//extern int dailyorder(void);
+>>>>>>> Stashed changes
 =======
 //extern int dailyorder(void);
 >>>>>>> Stashed changes
