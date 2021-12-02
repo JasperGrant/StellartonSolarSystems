@@ -235,41 +235,43 @@ int readbackorders(void){
 	
 	return 0;
 }
-
-int dailyorder(int input){
+int dailyorders(int input){
 	//intialize all structures needed
 	PRODUCT product;
 	SUPPLIER supplier;
-	HEADER header;//to store the daily order id 
+	
+	printf("1\n");
 	
 	int check;
 	long supplierid;
 	//open product and supplier reletive files to read
 	FILE * pfd = fopen("productsrelativefile.txt", "r");
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r");
-	
-	char filename[MAXLEN];
-	sprintf(filename, "ORDERSFILLED%d", globaldate);
+	//open daily order reletive file to write to jasper has to do the changing file names according to the date
+	printf("2\n");
+	char filename[32];
+	sprintf(filename, "ORDERS%d", globaldate);
+
 	FILE * dfd = fopen(filename, "a");
+	
+	printf("3\n");
 	
 	//fseek to the relvant product id 
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	//fread the product stuff into structure
 	fread(&product, sizeof(PRODUCT), 1, pfd);
-	
+
+	//find supplier using the manufacturer and place the file pointer at the start of the records in the supplier file
 	fseek(sfd, sizeof(HEADER), SEEK_SET);
-	
-	//find supplier using the manufacturer
 	while(check!= 0){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		check = strcmp(product.manufacturer, supplier.manufacturer);
 	}
-
-	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, Quantity of the product to be ordered 10\n", globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
+	//print the daily order to the text file ORDERS with encoded date
+	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, Quantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
 	fclose(dfd);
-	return 0;
+	
 }
-
 
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file
