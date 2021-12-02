@@ -111,8 +111,13 @@ int addnewsales(void){
 	fseek(pfd, sizeof(HEADER) + ((sale.PID-1)*sizeof(PRODUCT)), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 	
+	//Sale quantity and product stock are the same the last of the products has been bought so the product can be deleted.
+	if(sale.quantity == product.stock){
+		deleteproducts(sale.PID);
+		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
+	}
 	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
-	if(sale.quantity > product.stock){
+	else if(sale.quantity > product.stock){
 		
 		printf("Sale impossible as quantity of item requested is greater then stock. Order has been added to the backorders to be fullfilled when the stock is updated\n");
 	    tfd = fopen("backordersrelativefile.txt", "r+");//Open product relative file
@@ -120,6 +125,13 @@ int addnewsales(void){
 	//if sale is possible just open the sales reletive file
 	else{
 		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
+		
+		//Decrement stock with quantity
+		product.stock-=sale.quantity;
+		
+		//Write new quantity to products relative file
+		fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
+		fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	}
 
 		
@@ -130,13 +142,6 @@ int addnewsales(void){
 	
 	//Set sale status to active
 	sale.status = ACTIVE;
-
-	//Decrement stock with quantity
-	product.stock-=sale.quantity;
-		
-	//Write new quantity to products relative file
-	fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
-	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 		
 	//Properly assign values needed from product and customer to sale
 	strcpy(sale.name, customer.name);
