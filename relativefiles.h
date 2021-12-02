@@ -10,7 +10,6 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
-#include <time.h>
 
 #define MAXLEN 32 //Used for standard 32 byte elements
 #define MAXREC 288 //Max length of entire structure
@@ -113,3 +112,5 @@ extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
 extern int readbackorders(void);
+//Date functions
+int datestringtoint(char * string);

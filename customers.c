@@ -10,7 +10,6 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
-#include <time.h>
 
 #include "relativefiles.h"
 

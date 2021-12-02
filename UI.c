@@ -13,19 +13,40 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+//Global date variables
+int globaldate;
+char globaldatestring[11];
+
 int main(void){
 	
 	//Set filemode as binary
 	_fmode = _O_BINARY;
 	
 	//function selection variable
-	int input, input2;
+	int input;
+	
+	//String representing date
+	char datestring[11];
+	
+	//Print welcome message
+	printf("Welcome to the Stellarton Solar Systems Digital Storage System\n");
+	
+	//Prompt for today's date
+	printf("What is today's date? Format: YYYY:MM:DD\n");
+	fgets(datestring, 11, stdin);
+	
+	//Convert to operable int
+	globaldate = datestringtoint(datestring);
+	
+	//Copy input string to global string
+	strcpy(globaldatestring, datestring);
+	
+	
 	
 	//Loop continues to run as product uses functions. Ends on a selection of Quit
 	while(1){
 		
-		//Print initial welcome message and user options
-		printf("Welcome to the Stellarton Solar Systems Digital Storage System\n");
+		//Print initial user options
 		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n5. Initialize customer, product, supplier, and sales stores\n6. Display customer store\n7. Display product store\n8. Display supplier store\n9. Display sales store\n10. Update Information\n0. Quit\n");
 		
 		//Read user input
@@ -108,9 +129,9 @@ int main(void){
 				//Sub menu
 			    printf("Select function:\n1. Change a Customer Field\n2. Change a Product Field\n3. Change a Supplier Field\n");
 			    
-			    scanf("%d", &input2);
+			    scanf("%d", &input);
 			    
-			    switch(input2){
+			    switch(input){
 			    	case 1:
 			    		printf("Updating Customer Fields...\n");
 			    		changecustomers();
