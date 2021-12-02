@@ -256,27 +256,36 @@ int dailyorder(int input){
 	//find supplier using the manufacturer
 	while(check!= 0){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
-		check = strcmp(product.manufacturer, supplier.manufacturer)
+		check = strcmp(product.manufacturer, supplier.manufacturer);
 	}
 	
 	//copy supplier info into dailyorder 
-	strcpy(product.PID, dailyorder.PID);
-	strcpy(product.classification, dailyorder.classification);
-	strcpy(product.manufacturercode, dailyorder.manufacturercode);
-	strcpy(supplier.contact, dailyorder.suppliercontact);
-	strcpy(supplier.telephone, dailyorder.suppliertelephone);
-	strcpy(supplier.telephone, dailyorder.suppliertelephone);
-	strcpy(supplier.telephone, dailyorder.suppliertelephone);
-	//fwrite daily order 
+	strcpy(dailyorder.productid, product.PID);
+	strcpy(dailyorder.classification, product.classification);
+	strcpy(dailyorder.manufacturercode, product.manufacturercode);
+	strcpy(dailyorder.suppliercontact, supplier.contact);
+	strcpy(dailyorder.suppliertelephone, supplier.telephone);
+	strcpy(dailyorder.suppliertelephone, supplier.telephone);
+	strcpy(dailyorder.suppliertelephone, supplier.telephone);
 	
-	//close all files
+	//Write sale to relative file
+	fseek(dfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
+	fwrite(&dailyorder, sizeof(DAILYORDER), 1, dfd);
+		
+	header.first_id++;//Increment availible ID by 1
+		
+	//Write new first_id to header
+	fseek(dfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, dfd);
 	
+	fclose(dfd);
+	return 0;
 	
 }
 
 int initdailyorders(void){
 	
-	FILE * bfd = fopen("dailyordersrelativefile.txt","w");
+	FILE * dfd = fopen("dailyordersrelativefile.txt","w");
 	
 	//Init structs
 	HEADER header;
@@ -284,7 +293,7 @@ int initdailyorders(void){
 	
 	//Write header
 	fseek(dfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, bfd);
+	fwrite(&header, sizeof(HEADER), 1, dfd);
 	
 	//Close relative file
 	fclose(dfd);
