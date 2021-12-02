@@ -13,6 +13,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+extern int globaldate;
+
 int initsales(void){
 	
 	FILE * tfd = fopen("salesrelativefile.txt","w");
@@ -233,7 +235,7 @@ int readbackorders(void){
 	
 	return 0;
 }
-
+/*
 int dailyorder(int input){
 	//intialize all structures needed
 	PRODUCT product;
@@ -283,7 +285,7 @@ int dailyorder(int input){
 	return 0;
 	
 }
-
+*/
 int initdailyorders(void){
 	
 	FILE * dfd = fopen("dailyordersrelativefile.txt","w");
@@ -304,18 +306,21 @@ int initdailyorders(void){
 
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file
-	char * pastfilename;
+	char pastfilename[32];
 	//Initialize command to copy and rename ORDERS file
-	char * command;
+	char command[100];
 	//Fill filename with string
 	sprintf(pastfilename, "ORDERS%d", globaldate-30);
 	if(access(pastfilename,F_OK) == 0){
-		char * filename;
+		char filename[32];
 		sprintf(filename, "PAY_DUE%d", globaldate);
-		//Used to format shell command: cp ORDERS(date-30) PAY_DUE(date)
-		sprintf(command, "cp %s %s", pastfilename, filename);
+		//Used to format shell command: copy ORDERS(date-30) PAY_DUE(date)
+		sprintf(command, "copy %s %s", pastfilename, filename);
 		//execute copy command
 		system(command);
+	}
+	else{
+		return 0;
 	}
 
 }

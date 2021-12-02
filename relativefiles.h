@@ -128,3 +128,6 @@ extern int readbackorders(void);
 //Date functions
 int datestringtoint(char * string);
 
+//Payment Due Functions
+int paymentdue(void);
+
