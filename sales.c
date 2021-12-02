@@ -235,12 +235,11 @@ int readbackorders(void){
 	
 	return 0;
 }
-/*
+
 int dailyorder(int input){
 	//intialize all structures needed
 	PRODUCT product;
 	SUPPLIER supplier;
-	DAILYORDER dailyorder;
 	HEADER header;//to store the daily order id 
 	
 	int check;
@@ -248,46 +247,34 @@ int dailyorder(int input){
 	//open product and supplier reletive files to read
 	FILE * pfd = fopen("productsrelativefile.txt", "r");
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r");
-	//open daily order reletive file to write to jasper has to do the changing file names according to the date
-	FILE * dfd = fopen("dailyordersrelativefile.txt", "r+");
+	
+	char filename[MAXLEN];
+	sprintf(filename, "ORDERSFILLED%d", globaldate);
+	FILE * dfd = fopen(filename, "a");
 	
 	//fseek to the relvant product id 
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	//fread the product stuff into structure
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 	
+	fseek(sfd, sizeof(HEADER), SEEK_SET);
+	
 	//find supplier using the manufacturer
 	while(check!= 0){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		check = strcmp(product.manufacturer, supplier.manufacturer);
 	}
-	
-	//copy supplier info into dailyorder 
-	strcpy(dailyorder.productid, product.PID);
-	strcpy(dailyorder.classification, product.classification);
-	strcpy(dailyorder.manufacturercode, product.manufacturercode);
-	strcpy(dailyorder.suppliercontact, supplier.contact);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	strcpy(dailyorder.suppliertelephone, supplier.telephone);
-	
-	//Write sale to relative file
-	fseek(dfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
-	fwrite(&dailyorder, sizeof(DAILYORDER), 1, dfd);
-		
-	header.first_id++;//Increment availible ID by 1
-		
-	//Write new first_id to header
-	fseek(dfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, dfd);
-	
+
+	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, Quantity of the product to be ordered 10\n", globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
 	fclose(dfd);
 	return 0;
-	
 }
 
-*/
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file
 	char pastfilename[32];
