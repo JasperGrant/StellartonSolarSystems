@@ -114,6 +114,7 @@ int addnewsales(void){
 	if(sale.quantity == product.stock){
 		deleteproducts(sale.PID);
 		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
+		//dailyorder(sale.PID);
 	}
 	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
 	else if(sale.quantity > product.stock){
@@ -231,3 +232,72 @@ int readbackorders(void){
 	
 	return 0;
 }
+
+int dailyorder(int input){
+	//intialize all structures needed
+	PRODUCT product;
+	SUPPLIER supplier;
+	DAILYORDER dailyorder;
+	HEADER header;//to store the daily order id 
+	
+	int check;
+	long supplierid;
+	//open product and supplier reletive files to read
+	FILE * pfd = fopen("productsrelativefile.txt", "r");
+	FILE * sfd = fopen("suppliersrelativefile.txt", "r");
+	//open daily order reletive file to write to jasper has to do the changing file names according to the date
+	FILE * dfd = fopen("dailyordersrelativefile.txt", "r+");
+	
+	//fseek to the relvant product id 
+	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	//fread the product stuff into structure
+	fread(&product, sizeof(PRODUCT), 1, pfd);
+	
+	//find supplier using the manufacturer
+	while(check!= 0){
+		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
+		check = strcmp(product.manufacturer, supplier.manufacturer)
+	}
+	
+	//copy supplier info into dailyorder 
+	strcpy(product.PID, dailyorder.PID);
+	strcpy(product.classification, dailyorder.classification);
+	strcpy(product.manufacturercode, dailyorder.manufacturercode);
+	strcpy(supplier.contact, dailyorder.suppliercontact);
+	strcpy(supplier.telephone, dailyorder.suppliertelephone);
+	strcpy(supplier.telephone, dailyorder.suppliertelephone);
+	strcpy(supplier.telephone, dailyorder.suppliertelephone);
+	//fwrite daily order 
+	
+	//close all files
+	
+	
+}
+
+int initdailyorders(void){
+	
+	FILE * bfd = fopen("dailyordersrelativefile.txt","w");
+	
+	//Init structs
+	HEADER header;
+	header.first_id = 1;
+	
+	//Write header
+	fseek(dfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, bfd);
+	
+	//Close relative file
+	fclose(dfd);
+	
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+

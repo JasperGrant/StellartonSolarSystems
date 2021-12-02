@@ -14,6 +14,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define MAXLEN 32 //Used for standard 32 byte elements
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
+#define datelen 10//Used for date in sales and daily order relative files
 #define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
 
 //enum to tell whether a file has been deleted
@@ -80,7 +81,18 @@ struct sale{
 	int totalcost;
 };
 typedef struct sale SALE;
-
+/*
+struct dailyorder{
+	char date[datelen];
+	long PID;
+	char classification[MAXLEN];
+	char manufacturercode[MAXLEN];
+	char suppliercontact[MAXLEN];
+	char suppliertelephone[MAXLEN];
+	char supplieremail[LONGMAXLEN];
+};
+typedef struct dailyorder DAILYORDER;
+*/
 //Customer functions
 extern int initcustomers(void);
 extern int addnewcustomers(void);
@@ -112,5 +124,9 @@ extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
 extern int readbackorders(void);
+<<<<<<< Updated upstream
 //Date functions
 int datestringtoint(char * string);
+=======
+//extern int dailyorder(void);
+>>>>>>> Stashed changes

@@ -92,7 +92,7 @@ int readproducts(void){
 		fread(&product, sizeof(PRODUCT), 1, pfd);
 		//Check if record is deleted
 		if(product.status == ACTIVE){
-			printf("Product ID: %ld\nProduct Name:%s\nClassification: %s\nManufacturer: %sCost: $ %.2f\nManufacturer Code: %s\nStock: %d\nReorder Level: %d\n\n\n", 
+			printf("Product ID: %ld\nProduct Name:%s\nClassification: %s\nManufacturer: %s\nCost: $ %.2f\nManufacturer Code: %s\nStock: %d\nReorder Level: %d\n\n\n", 
 			product.PID, product.name, product.classification, product.manufacturer, 
 			(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
 		}
