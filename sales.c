@@ -81,6 +81,7 @@ int readsales(void){
 	return 0;
 }
 
+
 int addnewsales(void){
 	
 	//Init structs
@@ -92,6 +93,7 @@ int addnewsales(void){
 	//Open relative files
 	FILE * cfd = fopen("customersrelativefile.txt", "r");//Open customer relative file
 	FILE * pfd = fopen("productsrelativefile.txt", "r+");//Open product relative file
+	FILE * tfd;
 	
 	//Prompt for CID, PID and quantity of order
 	printf("Enter Customer ID: ");
@@ -111,67 +113,47 @@ int addnewsales(void){
 	
 	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
 	if(sale.quantity > product.stock){
+		
 		printf("Sale impossible as quantity of item requested is greater then stock. Order has been added to the backorders to be fullfilled when the stock is updated\n");
-		FILE * bfd = fopen("backordersrelativefile.txt", "r+");//Open backorders relative file
-		//obtain first availible ID to assign to a new backorder
-		fseek(bfd, 0, SEEK_SET);
-		fread(&header, sizeof(HEADER), 1, bfd);
-		
-		sale.TID = header.first_id; 
-		
-		//Properly assign values needed from product and customer to the back order
-		strcpy(sale.name, customer.name);
-		strcpy(sale.productname, product.name);
-		sale.totalcost = product.unitcost * sale.quantity;
-		
-		//Write backorder to relative file
-		fseek(bfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
-		fwrite(&sale, sizeof(SALE), 1, bfd);
-		
-		header.first_id++;//Increment availible ID for a backorder by 1
-		
-		//Write new first_id to header to the back order relative file
-		fseek(bfd, 0, SEEK_SET);
-		fwrite(&header, sizeof(HEADER), 1, bfd);
-		
-		//close the backorders relative file
-		fclose(bfd);
+	    tfd = fopen("backordersrelativefile.txt", "r+");//Open product relative file
 	}
+	//if sale is possible just open the sales reletive file
 	else{
-		FILE * tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
+		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
+	}
+
 		
-		//Obtain first availible TID
-		fseek(tfd, 0, SEEK_SET);
-		fread(&header, sizeof(HEADER), 1, tfd);
-		sale.TID = header.first_id; 
-		
-		//Set sale status to active
-		sale.status = ACTIVE;
+	//Obtain first availible TID
+	fseek(tfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, tfd);
+	sale.TID = header.first_id; 
 	
-		//Decrement stock with quantity
-		product.stock-=sale.quantity;
+	//Set sale status to active
+	sale.status = ACTIVE;
+
+	//Decrement stock with quantity
+	product.stock-=sale.quantity;
 		
-		//Write new quantity to products relative file
-		fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
-		fwrite(&product, sizeof(PRODUCT), 1, pfd);
+	//Write new quantity to products relative file
+	fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
+	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 		
-		//Properly assign values needed from product and customer to sale
-		strcpy(sale.name, customer.name);
-		strcpy(sale.productname, product.name);
-		sale.totalcost = product.unitcost * sale.quantity;
+	//Properly assign values needed from product and customer to sale
+	strcpy(sale.name, customer.name);
+	strcpy(sale.productname, product.name);
+	sale.totalcost = product.unitcost * sale.quantity;
 		
-		//Write sale to relative file
-		fseek(tfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
-		fwrite(&sale, sizeof(SALE), 1, tfd);
+	//Write sale to relative file
+	fseek(tfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
+	fwrite(&sale, sizeof(SALE), 1, tfd);
 		
-		header.first_id++;//Increment availible ID by 1
+	header.first_id++;//Increment availible ID by 1
 		
-		//Write new first_id to header
-		fseek(tfd, 0, SEEK_SET);
-		fwrite(&header, sizeof(HEADER), 1, tfd);
-		
-		fclose(tfd);
-}
+	//Write new first_id to header
+	fseek(tfd, 0, SEEK_SET);
+	fwrite(&header, sizeof(HEADER), 1, tfd);
+	
+	fclose(tfd);
 	//Close files
 	fclose(cfd);
 	fclose(pfd);
@@ -212,4 +194,36 @@ int deletesales(int input){
 	
 	//Close relative file
 	fclose(tfd);
+}
+
+int readbackorders(void){
+	
+	//Init structs
+	SALE sale;
+	HEADER header;
+	
+	//Open relative file
+	FILE * tfd = fopen("backordersrelativefile.txt", "r+");
+	
+	//Find first_id from header
+	fseek(tfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, tfd);
+	
+	//Print next TID
+	printf("Next TID: %ld\n", header.first_id);
+	
+	//Go through loop moving seeking and reading each element and then printing to stdout
+	for(int i = 0;i<header.first_id-1; i++){
+		fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+		fread(&sale, sizeof(SALE), 1, tfd);
+		if(sale.status == ACTIVE){
+			printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+		}
+	}
+	
+	//Close relative file
+	fclose(tfd);
+	
+	return 0;
 }

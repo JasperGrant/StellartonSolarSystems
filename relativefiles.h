@@ -110,3 +110,4 @@ extern int readsales(void);
 extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
+extern int readbackorders(void);

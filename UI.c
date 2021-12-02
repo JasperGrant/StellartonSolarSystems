@@ -98,6 +98,11 @@ int main(void){
 				printf("Displaying sales...\n");
 				readsales();
 				break;
+				
+			case 15:
+				printf("Displaying backorders...\n");
+				readbackorders();
+				break;
 			
 			case 10:
 				//Sub menu
