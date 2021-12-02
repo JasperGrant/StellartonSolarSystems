@@ -23,7 +23,7 @@ int initproducts(void){ //TODO
 	char *element;
 	char temprecord[MAXREC];
 	//Open files
-	FILE * input = fopen("Product v2.txt", "r");
+	FILE * input = fopen("Products v4.txt", "r");
 	FILE * pfd = fopen("productsrelativefile.txt", _access("productsrelativefile.txt", 0) < 0 ? "w" : "r+");
 	
 	
@@ -56,6 +56,9 @@ int initproducts(void){ //TODO
 		
 		element = strtok(NULL, "\t\"$");	
 		product.stock = atoi(element);
+		
+		element = strtok(NULL, "\t\"$");	
+		product.reorder = atoi(element);
 		
 		productid++;//increment product id
 		fseek(pfd, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);//move to the next record
@@ -90,9 +93,9 @@ int readproducts(void){
 		fread(&product, sizeof(PRODUCT), 1, pfd);
 		//Check if record is deleted
 		if(product.status == ACTIVE){
-			printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+			printf("Product ID: %ld\nProduct Name:%s\nClassification: %s\nManufacturer: %sCost: $ %.2f\nManufacturer Code: %s\nStock: %d\nReorder Level: %d\n\n\n", 
 			product.PID, product.name, product.classification, product.manufacturer, 
-			(float)product.unitcost/100, product.manufacturercode, product.stock);	
+			(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
 		}
 	}
 	//close relative file
@@ -148,6 +151,10 @@ int addnewproducts(void)
 	printf("Enter Stock\n");
 	fgets(tempstring, MAXLEN, stdin);
 	product.stock = atoi(tempstring);//converts the string argument str to an integer
+	
+	printf("Enter the Reorder Level\n");
+	fgets(tempstring, MAXLEN, stdin);
+	product.reorder = atoi(tempstring);//converts the string argument str to an integer
 	
 	//Set status to active
 	product.status = ACTIVE;
@@ -223,7 +230,7 @@ int changeproducts(void){
 	// open product relatve file
 	
 	int option;
-	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n");
+	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n7.Reorder Level\n");
 	scanf("%d", &option);
 	
 	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
@@ -266,14 +273,21 @@ int changeproducts(void){
 			fgets(tempstring, MAXLEN, stdin);
 			product.stock = atoi(tempstring);
 			break;
+		
+		case 7:
+			printf("Enter new Reorder Level\n");
+			fgets(tempstring, MAXLEN, stdin);
+			product.reorder = atoi(tempstring);
+			break;
+			
 					
 	}
 	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
-	printf("%ld, %s, %s, %s, %.2f, %s, %d\n", 
+	printf("%ld, %s, %s, %s, %.2f, %s, %d, %d\n", 
 	product.PID, product.name, product.classification, product.manufacturer, 
-	(float)product.unitcost/100, product.manufacturercode, product.stock);	
+	(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
 
 	//close relative file
 	fclose(pfd);

@@ -43,6 +43,7 @@ struct product{
 	int unitcost;
 	char manufacturercode[MAXLEN];
 	int stock;
+	int reorder;
 };
 typedef struct product PRODUCT;
 
@@ -109,4 +110,3 @@ extern int readsales(void);
 extern int deletesales(int input);
 extern int userdeletesales(void);
 extern int initbackorders(void);
-
