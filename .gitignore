@@ -4,3 +4,5 @@ sales.o
 StellartonSolarSystems.layout
 products.o
 customers.o
+sales.o
+StellartonSolarSystems.exe
