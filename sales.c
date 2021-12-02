@@ -10,6 +10,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "relativefiles.h"
 
@@ -67,7 +68,6 @@ int readsales(void){
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1; i++){
-		fseek(tfd, i*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
 			printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,

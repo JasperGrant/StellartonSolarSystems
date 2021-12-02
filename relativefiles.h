@@ -10,6 +10,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#include <time.h>
+
 #define MAXLEN 32 //Used for standard 32 byte elements
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes

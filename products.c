@@ -10,10 +10,11 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "relativefiles.h"
 
-int initproducts(void){ //TODO
+int initproducts(void){
 
 	//Init structs
 	HEADER header;
@@ -89,7 +90,6 @@ int readproducts(void){
 	printf("Next PID: %ld\n", header.first_id);
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1; i++){
-		fseek(pfd, i*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 		fread(&product, sizeof(PRODUCT), 1, pfd);
 		//Check if record is deleted
 		if(product.status == ACTIVE){

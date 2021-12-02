@@ -10,6 +10,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "relativefiles.h"
 
@@ -89,7 +90,6 @@ int readsuppliers(void){
 	printf("Next SID: %ld\n", header.first_id);
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1000; i++){
-		fseek(sfd, i*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		//Check if record is deleted
 		if(supplier.status == ACTIVE){

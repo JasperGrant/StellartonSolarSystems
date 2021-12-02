@@ -10,6 +10,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "relativefiles.h"
 
@@ -97,7 +98,6 @@ int readcustomers(void){
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1000; i++){
-		fseek(cfd, i*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
 		//Check if record is deleted
 		if(customer.status == ACTIVE){
