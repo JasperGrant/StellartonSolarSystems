@@ -49,7 +49,7 @@ int initproducts(void){
 		strcpy(product.manufacturer, element);
 		
 		element = strtok(NULL, "\t\"$");	
-		product.unitcost = (int)atof(element)*100;
+		product.unitcost = stringtointegervalue(element);
 
 		element = strtok(NULL, "\t\"$");	
 		strcpy(product.manufacturercode, element);
@@ -141,7 +141,7 @@ int addnewproducts(void)
 	
 	printf("Enter Unit Cost\n");
 	fgets(tempstring, MAXLEN, stdin);
-    product.unitcost = atof(tempstring)*100;//converts the string argument string to a floating-point number and is stored in cents
+    product.unitcost = stringtointegervalue(tempstring);//converts the string argument string to a integer containing the original value multiplied by 100
 	
 	printf("Enter Manufacturer Code\n");
 	fgets(product.manufacturercode, MAXLEN, stdin);
@@ -258,7 +258,7 @@ int changeproducts(void){
 		case 4:
 			printf("Enter new Unit Cost\n");
 	        fgets(tempstring, MAXLEN, stdin);
-    		product.unitcost = atof(tempstring)*100;
+    		product.unitcost = stringtointegervalue(tempstring);
 			break;
 			
 		case 5:

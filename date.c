@@ -49,3 +49,4 @@ int datestringtoint(char * string){
 	//Add number of days since STARTYEAR to added up months
 	return dateint + day;
 }
+

@@ -83,6 +83,9 @@ struct sale{
 };
 typedef struct sale SALE;
 
+
+//Conversion functions
+extern int stringtointegervalue(char * string);
 //Customer functions
 extern int initcustomers(void);
 extern int addnewcustomers(void);
@@ -119,9 +122,7 @@ extern int fillbackorders(void);
 extern int deletebackorders(int input);
 extern int dailyorders(int input);
 //Date functions
-
-int datestringtoint(char * string);
-char globaldatestring[11];
-
+extern int datestringtoint(char * string);
+//Date global variables
 int globaldate;
 char globaldatestring[11];
