@@ -13,6 +13,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+#define CUSTOMERFIRSTID 1000
+
 int initcustomers(void){
 
 	//Initialize structs
@@ -28,7 +30,7 @@ int initcustomers(void){
 	FILE * cfd = fopen("customersrelativefile.dat", _access("customersrelativefile.dat", 0) < 0 ? "w" : "r+");
 
 	//Assign value to CID and header next CID
-	long customerid = header.first_id = 1000; //1000 is the first CID
+	long customerid = header.first_id = CUSTOMERFIRSTID; //1000 is the first CID
 
 	fgets(temprecord, MAXREC, input); //Disregard first line in input
 	
@@ -62,7 +64,7 @@ int initcustomers(void){
 		strcpy(customer.telephone, element);
 		
 		customerid++;
-		fseek(cfd, ((customer.CID - 1000) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
+		fseek(cfd, ((customer.CID - CUSTOMERFIRSTID) * sizeof(CUSTOMER)) + sizeof(HEADER), SEEK_SET);
 		fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	}
 	
@@ -96,7 +98,7 @@ int readcustomers(void){
 	printf("Next CID: %ld\n", header.first_id);
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
-	for(int i = 0;i<header.first_id-1000; i++){
+	for(int i = 0;i<header.first_id-CUSTOMERFIRSTID; i++){
 		fread(&customer, sizeof(CUSTOMER), 1, cfd);
 		//Check if record is deleted
 		if(customer.status == ACTIVE){
@@ -166,7 +168,7 @@ int addnewcustomers(void)
 	customer.CID = header.first_id;
 	
 	//Write customer to relative file
-	fseek(cfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(CUSTOMER), SEEK_SET);
+	fseek(cfd, sizeof(HEADER) + (header.first_id-CUSTOMERFIRSTID) * sizeof(CUSTOMER), SEEK_SET);
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	//Increment next CID in header by one
@@ -206,11 +208,11 @@ int deletecustomers(int input){
 	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
 	//Read customer values from file
-	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fseek(cfd, (input-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	//Change customer status to DELETED and then pu record into file.
-	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fseek(cfd, (input-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	customer.status = DELETED;
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
@@ -244,7 +246,7 @@ int changecustomers(void){
 
 	
 	
-	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	fflush(stdin);
 	
@@ -293,7 +295,7 @@ int changecustomers(void){
 			
 		}
 		
-	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	

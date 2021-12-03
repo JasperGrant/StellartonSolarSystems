@@ -15,7 +15,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 //Global date variables
 extern int globaldate;
-extern char globaldatestring[11];
+extern char globaldatestring[DATELEN];
 
 int main(void){
 	
@@ -26,14 +26,14 @@ int main(void){
 	int input;
 	
 	//String representing date
-	char datestring[11];
+	char datestring[DATELEN];
 	
 	//Print welcome message
 	printf("Welcome to the Stellarton Solar Systems Digital Storage System\n");
 	
 	//Prompt for today's date
 	printf("What is today's date? Format: YYYY:MM:DD\n");
-	fgets(datestring, 11, stdin);
+	fgets(datestring, DATELEN, stdin);
 	
 	//Convert to operable int
 	globaldate = datestringtoint(datestring);

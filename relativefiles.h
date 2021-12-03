@@ -15,7 +15,16 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define MAXREC 288 //Max length of entire structure
 #define LONGMAXLEN 64 //Used for elements that will be longer then 32 bytes
 #define datelen 10//Used for date in sales and daily order relative files
-#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a 
+#define TRUNCATE(name) name[strlen(name)-1] = '\0' //Macro to remove a newline character from the end of a fgets string
+#define DATELEN 11 //Represents the number of characters that make up a formatted date string
+
+#define PRODUCTFIRSTID 1 //First product ID
+#define SALESFIRSTID 1 //First sale ID
+#define SUPPLIERFIRSTID 1000 //First supplied ID
+#define CUSTOMERFIRSTID 1000 //First customer ID
+#define CENTSTODOLLARS 100 //Used to convert between cents and dollars
+#define DOLLARSTOCENTS 100.0 //Used to convert a multiplied by 100 integer back to a float for viewing.
+
 
 //enum to tell whether a file has been deleted
 enum STATUS{ACTIVE = 1, DELETED = 0};
@@ -83,6 +92,9 @@ struct sale{
 };
 typedef struct sale SALE;
 
+
+//Conversion functions
+extern int stringtointegervalue(char * string);
 //Customer functions
 extern int initcustomers(void);
 extern int addnewcustomers(void);
@@ -119,9 +131,7 @@ extern int fillbackorders(void);
 extern int deletebackorders(int input);
 extern int dailyorders(int input);
 //Date functions
-
-int datestringtoint(char * string);
-char globaldatestring[11];
-
+extern int datestringtoint(char * string);
+//Date global variables
 int globaldate;
-char globaldatestring[11];
+char globaldatestring[DATELEN];

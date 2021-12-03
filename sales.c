@@ -14,7 +14,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include "relativefiles.h"
 
 extern int globaldate;
-extern char globaldatestring[11];
+extern char globaldatestring[DATELEN];
 
 int initsales(void){
 	
@@ -22,7 +22,7 @@ int initsales(void){
 	
 	//Init structs
 	HEADER header;
-	header.first_id = 1;
+	header.first_id = SALESFIRSTID;
 	
 	//Write header
 	fseek(tfd, 0, SEEK_SET);
@@ -69,11 +69,11 @@ int readsales(void){
 	printf("Next TID: %ld\n", header.first_id);
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
-	for(int i = 0;i<header.first_id-1; i++){
+	for(int i = 0;i<header.first_id-SALESFIRSTID; i++){
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
 			printf("Sale %ld:\nDate of the sale: %s\nCustomer ID: %ld\nCustomer Name: %s\nProduct ID: %ld\nProduct name: %s\nQuantity of the product purchsed: %d\nTotal cost: $ %.2f\n\n\n", sale.TID, sale.date, sale.CID, sale.name,
-			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/DOLLARSTOCENTS);
 		}
 	}
 	
@@ -107,11 +107,11 @@ int addnewsales(void){
 	scanf("%d",&sale.quantity);
 		
 	//Access customer that goes with CID
-	fseek(cfd, sizeof(HEADER) + ((sale.CID-1000)*sizeof(CUSTOMER)), SEEK_SET);
+	fseek(cfd, sizeof(HEADER) + ((sale.CID-CUSTOMERFIRSTID)*sizeof(CUSTOMER)), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 
 	//Access product that goes with PID
-	fseek(pfd, sizeof(HEADER) + ((sale.PID-1)*sizeof(PRODUCT)), SEEK_SET);
+	fseek(pfd, sizeof(HEADER) + ((sale.PID-PRODUCTFIRSTID)*sizeof(PRODUCT)), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 	
 	//Sale quantity and product stock are the same the last of the products has been bought so the product can be deleted.
@@ -120,8 +120,7 @@ int addnewsales(void){
 		tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
 		dailyorders(sale.PID);
 	}
-	//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered.
-	//#HAVE REHAN LOOK OVER
+	//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered
 	else if((product.stock - sale.quantity < product.reorder) && (product.stock - sale.quantity > 0)) {
 		tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
 		dailyorders(sale.PID);
@@ -141,7 +140,7 @@ int addnewsales(void){
 		product.stock-=sale.quantity;
 		
 		//Write new quantity to products relative file
-		fseek(pfd, sizeof(HEADER) + (sale.PID-1)*sizeof(PRODUCT), SEEK_SET);
+		fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
 		fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	}
 
@@ -161,7 +160,7 @@ int addnewsales(void){
 	sale.totalcost = product.unitcost * sale.quantity;
 		
 	//Write sale to relative file
-	fseek(tfd, sizeof(HEADER) + (header.first_id-1) * sizeof(SALE), SEEK_SET);
+	fseek(tfd, sizeof(HEADER) + (header.first_id-SALESFIRSTID) * sizeof(SALE), SEEK_SET);
 	fwrite(&sale, sizeof(SALE), 1, tfd);
 		
 	header.first_id++;//Increment availible ID by 1
@@ -201,11 +200,11 @@ int deletesales(int input){
 	FILE * tfd = fopen("salesrelativefile.dat", "r+");
 	
 	//Read sales values from file
-	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+	fseek(tfd, (input-SALESFIRSTID)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 	fread(&sale, sizeof(SALE), 1, tfd);
 	
 	//Change sale status to DELETED and then put record into file.
-	fseek(tfd, (input-1)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
+	fseek(tfd, (input-SALESFIRSTID)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
 	sale.status = DELETED;
 	fwrite(&sale, sizeof(SALE), 1, tfd);
 	
@@ -230,11 +229,11 @@ int readbackorders(void){
 	printf("Next Backorder number: %ld\n", header.first_id);
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
-	for(int i = 0;i<header.first_id-1; i++){
+	for(int i = 0;i<header.first_id-SALESFIRSTID; i++){
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
 			printf("Backorder: %ld\nDate of order: %s\nCustomer ID:%ld\nCustomer name: %s\nProduct ID: %ld\nProduct name: %s\nQuantity attempted to be purchased: %d\nCost of the failed sale: $ %.2f\n\n\n", sale.TID, sale.date, sale.CID, sale.name,
-			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/DOLLARSTOCENTS);
 		}
 	}
 	
@@ -253,15 +252,13 @@ int dailyorders(int input){
 	//open product and supplier reletive files to read
 	FILE * pfd = fopen("productsrelativefile.dat", "r");
 	FILE * sfd = fopen("suppliersrelativefile.dat", "r");
-	//open daily order reletive file to write to jasper has to do the changing file names according to the date
-	printf("2\n");
-	char filename[32];
+	char filename[MAXLEN];
 	sprintf(filename, "ORDERS%d", globaldate);
 
 	FILE * dfd = fopen(filename, "a");
 	
 	//fseek to the relvant product id 
-	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fseek(pfd, (input-SALESFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	//fread the product stuff into structure
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 
@@ -279,13 +276,13 @@ int dailyorders(int input){
 
 int paymentdue(void){
 	//Initialize filename string for 30 days ago ORDERS file
-	char pastfilename[32];
+	char pastfilename[MAXLEN];
 	//Initialize command to copy and rename ORDERS file
-	char command[100];
+	char command[MAXLEN]; //This length is because we are using two filenames that  could be up to maxlen + the copy command
 	//Fill filename with string
 	sprintf(pastfilename, "ORDERS%d", globaldate-30);
 	if(access(pastfilename,F_OK) == 0){
-		char filename[32];
+		char filename[MAXLEN];
 		sprintf(filename, "PAY_DUE%d", globaldate);
 		//Used to format shell command: copy ORDERS(date-30) PAY_DUE(date)
 		sprintf(command, "copy %s %s", pastfilename, filename);
@@ -322,14 +319,14 @@ int fillbackorders(void){
 	fread(&header, sizeof(HEADER), 1, tfd);
 	
 	//Go through loop moving seeking and reading each element and then if that element mataches the PID and is not deleted printing to daily ORDERSFILLED
-	for(int i = 0;i<header.first_id-1; i++){
+	for(int i = 0;i<header.first_id-SALESFIRSTID; i++){
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if((sale.status == ACTIVE) && (sale.PID == inputID)){
 			//Set filemode as binary
 			_fmode = _O_TEXT;
 			//print sale to file for order filled
 			fprintf(ordersfilled, "Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
-			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
+			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/DOLLARSTOCENTS);
 			//Set filemode as binary
 			_fmode = _O_BINARY;
 			//For every applicable item remove from inputted quantiy the quantity of that order
