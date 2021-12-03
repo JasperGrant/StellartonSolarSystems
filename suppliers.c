@@ -13,7 +13,14 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+<<<<<<< Updated upstream
 #define SUPPLIERFIRSTID 1000
+=======
+/*The initsuppliers function intializes a reletive file 
+if it doee not alredy exists and if the 
+file already exists then it opens to write to it and 
+converts the text to a relative file*/
+>>>>>>> Stashed changes
 
 int initsuppliers(void){
 
@@ -77,7 +84,8 @@ int initsuppliers(void){
 	
 }
 
-
+/*The function readsuppliers opens the suppliers 
+relative file and displays the supplier store*/
 int readsuppliers(void){
 	//Init structs
 	SUPPLIER supplier;
@@ -93,8 +101,8 @@ int readsuppliers(void){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		//Check if record is deleted
 		if(supplier.status == ACTIVE){
-			printf("Supplier ID: %ld\nManufacturer: %s\nContact: %s\nCompany: %s\nAddress: %s\nTelephone: %s\nEmail: %s\n\n\n", supplier.SID, supplier.manufacturer, 
-			supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
+			printf("Supplier ID: %ld\nManufacturer: %s\nContact: %s\nCompany: %s\nAddress: %s\nTelephone: %s\nEmail: %s\n\n\n", 
+			supplier.SID, supplier.manufacturer, supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 		}
 	}
 	//close relative file
@@ -103,8 +111,9 @@ int readsuppliers(void){
 	return 0;
 }
 
-
-
+/*The fucntion addnewsuppliers reads the supplier
+feilds from the user into the supplier structure
+and writes it to the supplier relative file*/
 
 int addnewsuppliers(void)
 {
@@ -170,6 +179,10 @@ int addnewsuppliers(void)
 	return 0;
 }
 
+/*Reads the supplier id to be deleted 
+from the user and passes it to
+the delete function*/
+
 int userdeletesuppliers(void){
 	//Prompt user for supplier ID
 	printf("Enter a SID: ");
@@ -181,6 +194,9 @@ int userdeletesuppliers(void){
 	deletesuppliers(input);
 }
 
+/*The function delete suppliers uses the supplier id to
+acces the supplier record to be deleted and changes the 
+status to deleted hence logically deleting the record*/
 int deletesuppliers(int input){
 	//Input variable
 	char tempstring[MAXREC];
@@ -205,6 +221,10 @@ int deletesuppliers(int input){
 	fclose(sfd);
 }
 
+/*The function changesuppliers prompts the user for a supplier id 
+and and then asks which feilds are to be changed and overwrites those 
+feilds*/
+
 int changesuppliers(void){
 	
 	//open the supplier reletive file to read
@@ -225,6 +245,9 @@ int changesuppliers(void){
 	
 	
 	int option;
+	int op = 1;
+	//while loop used to chnage multiple feilds without jumping back to main
+	while(op){
 	printf("Select the feild you would like to change\n1.Manufacturer\n2.Contact\n3.Company Name\n4.Address\n5.Telephone\n6.Email\n");
 	scanf("%d", &option);
 
@@ -233,38 +256,39 @@ int changesuppliers(void){
 	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 	fflush(stdin);
-	
-		switch(option){
-			case 1:
-				printf("Enter Manufacturer\n");
-	            fgets(supplier.manufacturer, MAXLEN, stdin);
-	            TRUNCATE(supplier.manufacturer);
-		        break;
+	//use the option entered by the user to change a particular feild
+	switch(option){
+		case 1:
+			printf("Enter Manufacturer\n");
+            fgets(supplier.manufacturer, MAXLEN, stdin);
+            TRUNCATE(supplier.manufacturer);
+	        break;
 				
-			case 2:
-				printf("Enter Supplier Contact\n");
-				fgets(supplier.contact, MAXLEN, stdin);
-				TRUNCATE(supplier.contact);
-				break;
+		case 2:
+			printf("Enter Supplier Contact\n");
+			fgets(supplier.contact, MAXLEN, stdin);
+			TRUNCATE(supplier.contact);
+			break;
 			
-			case 3:
-				printf("Enter Company Name\n");
-				fgets(supplier.company, MAXLEN, stdin);
-				TRUNCATE(supplier.company);
-				break;
+		case 3:
+			printf("Enter Company Name\n");
+			fgets(supplier.company, MAXLEN, stdin);
+			TRUNCATE(supplier.company);
+			break;
 			
-			case 4:
-				printf("Enter Supplier Address\n");
-				fgets(supplier.address, MAXLEN, stdin);
-				TRUNCATE(supplier.address);
-				break;
+		case 4:
+			printf("Enter Supplier Address\n");
+			fgets(supplier.address, MAXLEN, stdin);
+			TRUNCATE(supplier.address);
+			break;
 				
-			case 5:
-				printf("Enter Telephone Number\n");
-				fgets(supplier.telephone, MAXLEN, stdin);
-				TRUNCATE(supplier.telephone);
-				break;
+		case 5:
+			printf("Enter Telephone Number\n");
+			fgets(supplier.telephone, MAXLEN, stdin);
+			TRUNCATE(supplier.telephone);
+			break;
 				
+<<<<<<< Updated upstream
 			case 6:
 				printf("Enter Supplier Email\n");
 				fgets(supplier.email, MAXLEN, stdin);
@@ -272,12 +296,34 @@ int changesuppliers(void){
 				break;		
 		}
 	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+=======
+		case 6:
+			printf("Enter Supplier Email\n");
+			fgets(supplier.email, MAXLEN, stdin);
+			TRUNCATE(supplier.email);
+			break;	
+			
+	}
+	//access the supplier record using the supplier id again since the fread was done
+	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	//write the product record to the product relative file
+>>>>>>> Stashed changes
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
-	
+	//print the customer record added to the supplier relative file
 	printf("%ld, %s, %s, %s, %s, %s, %s\n", supplier.SID, supplier.manufacturer, 
 	supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);	
-
+	
+	//the user can change multiple feilds of the same record
+	printf("Do you want to change another feild\n");
+	printf("Enter 1 for YES   ||   Enter 0 for NO\n");
+	
+	fflush(stdin);
+	
+	scanf("%d", &op);//read the option from the user if they want to change another feild
+	
+	fflush(stdin);//Flush input to not confused program with scanf followed by fgets.
+}
 	//close relative file
 	fclose(sfd);
 	

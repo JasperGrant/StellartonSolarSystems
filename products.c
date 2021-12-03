@@ -12,7 +12,10 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <fcntl.h>
 
 #include "relativefiles.h"
-
+/*The initproducts function intializes a reletive file 
+if it doee not alredy exists and if the 
+file already exists then it opens to write to it and 
+converts the text to a relative file*/
 int initproducts(void){
 
 	//Init structs
@@ -64,17 +67,20 @@ int initproducts(void){
 		fseek(pfd, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);//move to the next record
 		fwrite(&product, sizeof(PRODUCT), 1, pfd);//write the elments to the relative file
 	}
+	//Update the first available id and write it to the relative file
 	header.first_id = productid;
 	fseek(pfd, 0, SEEK_SET);
 	fwrite(&header, sizeof(HEADER), 1, pfd);
 	
+	//close files
 	fclose(input);
 	fclose(pfd);
 	
 	return 0;
 	
 }
-
+/*The function readproducts opens the products 
+relative file and displays the product store*/
 int readproducts(void){
 	
 	//Init structs
@@ -103,6 +109,9 @@ int readproducts(void){
 	return 0;
 }
 
+/*The fucntion addnewproducts reads the customer
+feilds from the user into the product structure
+and writes it to the product relative file*/
 
 int addnewproducts(void)
 {
@@ -175,16 +184,24 @@ int addnewproducts(void)
 	
 }
 
+/*Reads the product id to be deleted 
+from the user and passes it to
+the delete function*/
+
 int userdeleteproducts(void){
 	//Prompt user for product ID
 	printf("Enter a PID: ");
-	fflush(stdin);
+	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	int input;
 	scanf("%d", &input);
 	
 	//run delete function
 	deleteproducts(input);
 }
+
+/*The function delete products uses the product id to
+acces the product record to be deleted and changes the 
+status to deleted hence logically deleting the record*/
 
 int deleteproducts(int input){
 	//Input variable
@@ -209,6 +226,9 @@ int deleteproducts(int input){
 	//Close relative file
 	fclose(pfd);
 }
+/*The function changeproducts prompts the user for a product id 
+and and then asks which feilds are to be changed and overwrites those 
+feilds*/
 
 int changeproducts(void){
 	//open product reletive file to read and write
@@ -218,6 +238,7 @@ int changeproducts(void){
 	long productid;
 	fflush(stdin); 
 	
+	//prompt the user for the product id
 	printf("Enter the Product ID you want to change:\n");
 	fgets(tempstring, MAXLEN, stdin);
 	productid = atoi(tempstring);
@@ -230,15 +251,19 @@ int changeproducts(void){
 	
 	int option;
 	int op = 1;
+	//while loop lets the user to change multiple feilds with out jumping to the main
 	while(op){
 	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n7.Reorder Level\n");
 	scanf("%d", &option);
 	
+	//use the customer id to access the customer record
 	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
-	fflush(stdin);
 	
-		switch(option){
+	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
+	
+	//use the option entered by the user to change a particular feild
+	switch(option){
 		case 1:
 			printf("Enter new Name\n");
 	        fgets(product.name, MAXLEN, stdin);
@@ -280,21 +305,27 @@ int changeproducts(void){
 			fgets(tempstring, MAXLEN, stdin);
 			product.reorder = atoi(tempstring);
 			break;
-			
 					
 	}
+	//access the product record using the product id again since the fread was done
 	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	//write the product record to the product relative file
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
+	//print the customer record added to the product relative file
 	printf("%ld, %s, %s, %s, %.2f, %s, %d, %d\n", 
 	product.PID, product.name, product.classification, product.manufacturer, 
 	(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
 	
+	//the user can change multiple feilds of the same record
 	printf("Do you want to change another feild\n");
 	printf("Enter 1 for YES   ||   Enter 0 for NO\n");
-	fflush(stdin);
-	scanf("%d", &op);
-	fflush(stdin);
+	
+	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
+	
+	scanf("%d", &op);//read the option from the user if they want to change another feild
+	
+	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 }
 	//close relative file
 	fclose(pfd);

@@ -12,9 +12,16 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <fcntl.h>
 
 #include "relativefiles.h"
+<<<<<<< Updated upstream
 
 #define CUSTOMERFIRSTID 1000
 
+=======
+/*The initcustomers function intializes a reletive file 
+if it doee not alredy exists and if the 
+file already exists then it opens to write to it and 
+converts the text to a relative file*/
+>>>>>>> Stashed changes
 int initcustomers(void){
 
 	//Initialize structs
@@ -80,7 +87,8 @@ int initcustomers(void){
 	return 0;
 	
 }
-
+/*The function readcustomers opens the customers 
+relative file and displays the customer store */
 int readcustomers(void){
 	
 	//Init structs
@@ -114,6 +122,9 @@ int readcustomers(void){
 	return 0;
 }
 
+/*The fucntion addnewcustomers reads the customer
+feilds from the user into the customer structure
+and writes it to the customer relative file*/
 
 int addnewcustomers(void)
 {
@@ -185,6 +196,9 @@ int addnewcustomers(void)
 	
 }
 
+/*Reads the Customer id to be deleted 
+from the user and passes it to
+the delete function*/
 int userdeletecustomers(void){
 	//Prompt user for customer ID
 	printf("Enter a CID: ");
@@ -195,6 +209,10 @@ int userdeletecustomers(void){
 	//run delete function
 	deletecustomers(input);
 }
+
+/*The function delete customers uses the customer id to
+acces the customer record to be deleted and changes the 
+status to deleted hence logically deleting the record*/
 
 int deletecustomers(int input){
 	//Input variable
@@ -220,18 +238,22 @@ int deletecustomers(int input){
 	fclose(cfd);
 }
 
+/*The function changecustomers prompts the user for a customer id 
+and and then asks which feilds are to be changed and overwrites those 
+feilds*/
 
 int changecustomers(void){
 	
 	//open the supplier reletive file to read
 	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
-	char *tempstring;
+	char *tempstring;//temerory variable to store the customer id
 	long customerid;
-	fflush(stdin); 
-	
+	fflush(stdin);
+	//prompt the user for the customer id
 	printf("Enter the customer ID you want to change:\n");
 	fgets(tempstring, MAXLEN, stdin);
+	
 	customerid = atoi(tempstring);
 	fflush(stdin);
 	
@@ -241,15 +263,22 @@ int changecustomers(void){
 	
 	
 	int option;
+	int op = 1;
+	//while loop lets the user to change multiple feilds with out jumping to the main
+	while(op){
+		
 	printf("Select the feild you would like to change\n1.Name\n2.businessname\n3.streetaddress\n4.Town\n5.Province\n6.Postal Code\n7.Telephone\n");
 	scanf("%d", &option);
-
 	
-	
+<<<<<<< Updated upstream
 	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+=======
+    //use the customer id to access the customer record
+	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+>>>>>>> Stashed changes
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	fflush(stdin);
-	
+	//use the option entered by the user to change a particular feild
 	switch(option){
 		case 1:
 			printf("Enter name\n");
@@ -294,15 +323,30 @@ int changecustomers(void){
 			break;
 			
 		}
+<<<<<<< Updated upstream
 		
 	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+=======
+	//access the customer record using the customer id again since the fread was done
+	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	//write the customer record to the customer relative file
+>>>>>>> Stashed changes
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
-	
+	//print the customer record added to the customer relative file
 	printf("%ld, %s, %s, %s, %s, %s, %s, %s\n", 
 		customer.CID, customer.name, customer.businessname, customer.streetaddress, 
 		customer.town, customer.province, customer.postalcode, customer.telephone); 
-
+	//the user can change multiple feilds of the same record
+	printf("Do you want to change another feild\n");
+	printf("Enter 1 for YES   ||   Enter 0 for NO\n");
+	
+	fflush(stdin);//Flush input to not confused program with scanf followed by fgets.
+	
+	scanf("%d", &op);//read the option from the user if they want to change another feild
+	
+	fflush(stdin);//Flush input to not confused program with scanf followed by fgets.
+}
 	//close relative file
 	fclose(cfd);
 	

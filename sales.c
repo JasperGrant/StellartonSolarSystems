@@ -16,6 +16,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 extern int globaldate;
 extern char globaldatestring[DATELEN];
 
+/*The initsales function intializes a reletive file 
+by creating it and writes the first available sales id*/
 int initsales(void){
 	
 	FILE * tfd = fopen("salesrelativefile.dat","w");
@@ -34,6 +36,8 @@ int initsales(void){
 	return 0;
 }
 
+/*The initbackorders function intializes a reletive file 
+by creating it and writes the first available backorder number*/
 int initbackorders(void){
 	
 	FILE * bfd = fopen("backorders.dat","w");
@@ -51,7 +55,8 @@ int initbackorders(void){
 	
 	return 0;
 }
-
+/*The function readsales opens the sales 
+relative file and displays the sales store*/
 int readsales(void){
 	
 	//Init structs
@@ -83,7 +88,9 @@ int readsales(void){
 	return 0;
 }
 
-
+/*This function prompts the user for the customer id
+and the product id and uses that to sell a product relating 
+to the product id to the customer relating to the customer id*/
 int addnewsales(void){
 	
 	//Init structs
@@ -177,6 +184,10 @@ int addnewsales(void){
 	return 0;
 }
 
+/*Reads the sale id to be deleted 
+from the user and passes it to
+the delete function*/
+
 int userdeletesales(void){
 	//Prompt user for sales ID
 	printf("Enter a TID: ");
@@ -187,6 +198,10 @@ int userdeletesales(void){
 	//run delete function
 	deletesales(input);
 }
+
+/*The function delete sales uses the sale id to
+acces the sale record to be deleted and changes the 
+status to deleted hence logically deleting the record*/
 
 int deletesales(int input){
 	//Input variable
@@ -211,6 +226,9 @@ int deletesales(int input){
 	//Close relative file
 	fclose(tfd);
 }
+
+/*The function readbackorders opens the backorder
+relative file and displays the backorder store*/
 
 int readbackorders(void){
 	
@@ -242,6 +260,10 @@ int readbackorders(void){
 	
 	return 0;
 }
+
+/*This function product id as the argument 
+and seacrhes for the supplier that supplies the product
+and creates a daily order text file */
 int dailyorders(int input){
 	//intialize all structures needed
 	PRODUCT product;
@@ -294,7 +316,7 @@ int paymentdue(void){
 	}
 
 }
-
+/**/
 int fillbackorders(void){
 	//Prompt user for products which has a filled order and quantity
 	int inputID, inputQuantity;
