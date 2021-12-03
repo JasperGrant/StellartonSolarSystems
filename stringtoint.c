@@ -14,6 +14,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+//Function to take a string representing a float as an argument and return the int value of the string multiplied by 100.
 int stringtointegervalue(char * string){
 	//declare integers
 	int dollars, cents;

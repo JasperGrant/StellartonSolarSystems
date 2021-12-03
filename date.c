@@ -18,12 +18,15 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #define LEAPYEARDAYS 366 //This is the number of days in a leap year
 #define MONTHOFFSET 1 //array starts at 0 months start at 1 so subtracting this value makes array calls and months work nicely
 #define LEAPYEARFREQUENCY 4 //Represents that every four years is a leap year
+#define MONTHSINYEAR 12 //Represents number of months in a year
 
 //Arrays to hold number of days in a specific month for leap years and none leap years
-int normalmonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-int leapyearmonths[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-int usedmonths[12];
+int normalmonths[MONTHSINYEAR] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int leapyearmonths[MONTHSINYEAR] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int usedmonths[MONTHSINYEAR];
 
+
+//Function to take a date in our chosen format YYYY:MM:DD and convert it into the number of days since the start year including leap years. Arguments: date string, Returns: encoded date integer
 int datestringtoint(char * string){	
 	//Declare date variables
 	int year, month, day, dateint = 0;
