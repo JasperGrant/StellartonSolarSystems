@@ -13,14 +13,10 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
-<<<<<<< Updated upstream
-#define SUPPLIERFIRSTID 1000
-=======
 /*The initsuppliers function intializes a reletive file 
 if it doee not alredy exists and if the 
 file already exists then it opens to write to it and 
 converts the text to a relative file*/
->>>>>>> Stashed changes
 
 int initsuppliers(void){
 
@@ -288,26 +284,19 @@ int changesuppliers(void){
 			TRUNCATE(supplier.telephone);
 			break;
 				
-<<<<<<< Updated upstream
+
 			case 6:
 				printf("Enter Supplier Email\n");
 				fgets(supplier.email, MAXLEN, stdin);
 				TRUNCATE(supplier.email);
 				break;		
-		}
-	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
-=======
-		case 6:
-			printf("Enter Supplier Email\n");
-			fgets(supplier.email, MAXLEN, stdin);
-			TRUNCATE(supplier.email);
-			break;	
-			
 	}
+
+		
+	
 	//access the supplier record using the supplier id again since the fread was done
-	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	//write the product record to the product relative file
->>>>>>> Stashed changes
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
 	//print the customer record added to the supplier relative file

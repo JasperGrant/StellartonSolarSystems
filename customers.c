@@ -12,16 +12,12 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 #include <fcntl.h>
 
 #include "relativefiles.h"
-<<<<<<< Updated upstream
 
-#define CUSTOMERFIRSTID 1000
 
-=======
 /*The initcustomers function intializes a reletive file 
 if it doee not alredy exists and if the 
 file already exists then it opens to write to it and 
 converts the text to a relative file*/
->>>>>>> Stashed changes
 int initcustomers(void){
 
 	//Initialize structs
@@ -270,12 +266,9 @@ int changecustomers(void){
 	printf("Select the feild you would like to change\n1.Name\n2.businessname\n3.streetaddress\n4.Town\n5.Province\n6.Postal Code\n7.Telephone\n");
 	scanf("%d", &option);
 	
-<<<<<<< Updated upstream
 	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-=======
     //use the customer id to access the customer record
-	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
->>>>>>> Stashed changes
+	
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	fflush(stdin);
 	//use the option entered by the user to change a particular feild
@@ -323,14 +316,10 @@ int changecustomers(void){
 			break;
 			
 		}
-<<<<<<< Updated upstream
-		
-	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
-=======
+
 	//access the customer record using the customer id again since the fread was done
-	fseek(cfd, (customerid-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
+	fseek(cfd, (customerid-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	//write the customer record to the customer relative file
->>>>>>> Stashed changes
 	fwrite(&customer, sizeof(CUSTOMER), 1, cfd);
 	
 	//print the customer record added to the customer relative file
