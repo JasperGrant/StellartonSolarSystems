@@ -229,6 +229,8 @@ int changeproducts(void){
 	// open product relatve file
 	
 	int option;
+	int op = 1;
+	while(op){
 	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n7.Reorder Level\n");
 	scanf("%d", &option);
 	
@@ -287,7 +289,13 @@ int changeproducts(void){
 	printf("%ld, %s, %s, %s, %.2f, %s, %d, %d\n", 
 	product.PID, product.name, product.classification, product.manufacturer, 
 	(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
-
+	
+	printf("Do you want to change another feild\n");
+	printf("Enter 1 for YES   ||   Enter 0 for NO\n");
+	fflush(stdin);
+	scanf("%d", &op);
+	fflush(stdin);
+}
 	//close relative file
 	fclose(pfd);
 	
