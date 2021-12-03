@@ -13,6 +13,7 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+#define SUPPLIERFIRSTID 1000
 
 int initsuppliers(void){
 
@@ -29,7 +30,7 @@ int initsuppliers(void){
 	FILE * sfd = fopen("suppliersrelativefile.dat", _access("suppliersrelativefile.dat", 0) < 0 ? "w" : "r+");
 	
 	
-	long supplierid = header.first_id = 1000; //1001 is the first supplier id
+	long supplierid = header.first_id = SUPPLIERFIRSTID; //1001 is the first supplier id
 	
 	fgets(temprecord, MAXREC, input); //Disregard first line
 	//read the information from the text file until end of file
@@ -61,7 +62,7 @@ int initsuppliers(void){
 
 		
 		supplierid++; //increment supplier id
-		fseek(sfd, ((supplier.SID - 1000) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);//move to the next record
+		fseek(sfd, ((supplier.SID - SUPPLIERFIRSTID) * sizeof(SUPPLIER)) + sizeof(HEADER), SEEK_SET);//move to the next record
 		fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);//write the information to the reletive file
 	}
 	header.first_id = supplierid; //update first available id in the header 
@@ -88,7 +89,7 @@ int readsuppliers(void){
 	fread(&header, sizeof(HEADER), 1, sfd);
 	printf("Next SID: %ld\n", header.first_id);
 	//Go through loop moving seeking and reading each element and then printing to stdout
-	for(int i = 0;i<header.first_id-1000; i++){
+	for(int i = 0;i<header.first_id-SUPPLIERFIRSTID; i++){
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 		//Check if record is deleted
 		if(supplier.status == ACTIVE){
@@ -155,7 +156,7 @@ int addnewsuppliers(void)
 	//Assign SID value from header.first_id
 	supplier.SID = header.first_id;
 
-	fseek(sfd, sizeof(HEADER) + (header.first_id-1000) * sizeof(SUPPLIER), SEEK_SET);
+	fseek(sfd, sizeof(HEADER) + (header.first_id-SUPPLIERFIRSTID) * sizeof(SUPPLIER), SEEK_SET);
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
 	header.first_id++;//increament first available id
@@ -192,11 +193,11 @@ int deletesuppliers(int input){
 	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	
 	//Read supplier values from file
-	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fseek(sfd, (input-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
 	//Change supplier status to DELETED and then put record into file.
-	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fseek(sfd, (input-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	supplier.status = DELETED;
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
@@ -229,7 +230,7 @@ int changesuppliers(void){
 
 	
 	
-	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 	fflush(stdin);
 	
@@ -270,7 +271,7 @@ int changesuppliers(void){
 				TRUNCATE(supplier.email);
 				break;		
 		}
-	fseek(sfd, (supplierid-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fwrite(&supplier, sizeof(SUPPLIER), 1, sfd);
 	
 	

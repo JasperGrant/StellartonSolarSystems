@@ -19,5 +19,5 @@ int stringtointegervalue(char * string){
 	int dollars, cents;
 	//use sscanf to pull out two integers from the string
 	sscanf(string, "%d.%d", &dollars, &cents);
-	return dollars*100+cents;
+	return dollars*CENTSTODOLLARS+cents;
 }

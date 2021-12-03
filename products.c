@@ -13,6 +13,8 @@ Authors: Jasper Grant B00829263, Rehan Khalid B00826127
 
 #include "relativefiles.h"
 
+#define PRODUCTFIRSTID 1
+
 int initproducts(void){
 
 	//Init structs
@@ -27,7 +29,7 @@ int initproducts(void){
 	FILE * pfd = fopen("productsrelativefile.dat", _access("productsrelativefile.dat", 0) < 0 ? "w" : "r+");
 	
 	
-	long productid = header.first_id = 1; //1 is the first PID
+	long productid = header.first_id = PRODUCTFIRSTID; //1 is the first PID
 	
 	fgets(temprecord, MAXREC, input); //Disregard first line in input
 	
@@ -61,7 +63,7 @@ int initproducts(void){
 		product.reorder = atoi(element);
 		
 		productid++;//increment product id
-		fseek(pfd, ((product.PID - 1) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);//move to the next record
+		fseek(pfd, ((product.PID - PRODUCTFIRSTID) * sizeof(PRODUCT)) + sizeof(HEADER), SEEK_SET);//move to the next record
 		fwrite(&product, sizeof(PRODUCT), 1, pfd);//write the elments to the relative file
 	}
 	header.first_id = productid;
@@ -88,13 +90,13 @@ int readproducts(void){
 	
 	printf("Next PID: %ld\n", header.first_id);
 	//Go through loop moving seeking and reading each element and then printing to stdout
-	for(int i = 0;i<header.first_id-1; i++){
+	for(int i = 0;i<header.first_id-PRODUCTFIRSTID; i++){
 		fread(&product, sizeof(PRODUCT), 1, pfd);
 		//Check if record is deleted
 		if(product.status == ACTIVE){
 			printf("Product ID: %ld\nProduct Name:%s\nClassification: %s\nManufacturer: %s\nCost: $ %.2f\nManufacturer Code: %s\nStock: %d\nReorder Level: %d\n\n\n", 
 			product.PID, product.name, product.classification, product.manufacturer, 
-			(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
+			(float)product.unitcost/DOLLARSTOCENTS, product.manufacturercode, product.stock, product.reorder);	
 		}
 	}
 	//close relative file
@@ -161,7 +163,7 @@ int addnewproducts(void)
 	//Assign PID value from header.first_id
 	product.PID = header.first_id;
 
-	fseek(pfd, sizeof(HEADER) + (header.first_id-1) * sizeof(PRODUCT), SEEK_SET);
+	fseek(pfd, sizeof(HEADER) + (header.first_id-PRODUCTFIRSTID) * sizeof(PRODUCT), SEEK_SET);
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
 	header.first_id++;//increment first available id
@@ -198,11 +200,11 @@ int deleteproducts(int input){
 	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	
 	//Read supplier values from file
-	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fseek(pfd, (input-PRODUCTFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 	
 	//Change product status to DELETED and then put record into file.
-	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fseek(pfd, (input-PRODUCTFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	product.status = DELETED;
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
@@ -232,7 +234,7 @@ int changeproducts(void){
 	printf("Select the feild you would like to change\n1.Name\n2.Classification\n3.Manufacturer\n4.Unitcost\n5.Manufacturer Code\n6.Stock\n7.Reorder Level\n");
 	scanf("%d", &option);
 	
-	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fseek(pfd, (productid-PRODUCTFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 	fflush(stdin);
 	
@@ -281,12 +283,12 @@ int changeproducts(void){
 			
 					
 	}
-	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
+	fseek(pfd, (productid-PRODUCTFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fwrite(&product, sizeof(PRODUCT), 1, pfd);
 	
 	printf("%ld, %s, %s, %s, %.2f, %s, %d, %d\n", 
 	product.PID, product.name, product.classification, product.manufacturer, 
-	(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);	
+	(float)product.unitcost/DOLLARSTOCENTS, product.manufacturercode, product.stock, product.reorder);	
 
 	//close relative file
 	fclose(pfd);
