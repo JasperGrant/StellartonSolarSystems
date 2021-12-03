@@ -72,7 +72,7 @@ int readsales(void){
 	for(int i = 0;i<header.first_id-1; i++){
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
-			printf("Sale: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			printf("Sale %ld:\nDate of the sale: %s\nCustomer ID: %ld\nCustomer Name: %s\nProduct ID: %ld\nProduct name: %s\nQuantity of the product purchsed: %d\nTotal cost: $ %.2f\n\n\n", sale.TID, sale.date, sale.CID, sale.name,
 			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
 		}
 	}
@@ -118,7 +118,7 @@ int addnewsales(void){
 	if(sale.quantity == product.stock){
 		deleteproducts(sale.PID);
 		tfd = fopen("salesrelativefile.txt", "r+");//Open sale relative file
-		//dailyorder(sale.PID);
+		dailyorders(sale.PID);
 	}
 	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
 	else if(sale.quantity > product.stock){
@@ -150,6 +150,7 @@ int addnewsales(void){
 	//Properly assign values needed from product and customer to sale
 	strcpy(sale.name, customer.name);
 	strcpy(sale.productname, product.name);
+	strcpy(sale.date, globaldatestring);
 	sale.totalcost = product.unitcost * sale.quantity;
 		
 	//Write sale to relative file
@@ -219,13 +220,13 @@ int readbackorders(void){
 	fread(&header, sizeof(HEADER), 1, tfd);
 	
 	//Print next TID
-	printf("Next TID: %ld\n", header.first_id);
+	printf("Next Backorder number: %ld\n", header.first_id);
 	
 	//Go through loop moving seeking and reading each element and then printing to stdout
 	for(int i = 0;i<header.first_id-1; i++){
 		fread(&sale, sizeof(SALE), 1, tfd);
 		if(sale.status == ACTIVE){
-			printf("Backorder: %ld, %ld: %s, %ld: %s, %d, $ %.2f\n", sale.TID, sale.CID, sale.name,
+			printf("Backorder: %ld\nDate of order: %s\nCustomer ID:%ld\nCustomer name: %s\nProduct ID: %ld\nProduct name: %s\nQuantity attempted to be purchased: %d\nCost of the failed sale: $ %.2f\n\n\n", sale.TID, sale.date, sale.CID, sale.name,
 			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/100.0);
 		}
 	}
@@ -240,10 +241,8 @@ int dailyorders(int input){
 	PRODUCT product;
 	SUPPLIER supplier;
 	
-	printf("1\n");
 	
 	int check;
-	long supplierid;
 	//open product and supplier reletive files to read
 	FILE * pfd = fopen("productsrelativefile.txt", "r");
 	FILE * sfd = fopen("suppliersrelativefile.txt", "r");
@@ -253,8 +252,6 @@ int dailyorders(int input){
 	sprintf(filename, "ORDERS%d", globaldate);
 
 	FILE * dfd = fopen(filename, "a");
-	
-	printf("3\n");
 	
 	//fseek to the relvant product id 
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);

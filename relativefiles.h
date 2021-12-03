@@ -79,6 +79,7 @@ struct sale{
 	char productname[LONGMAXLEN];
 	int quantity;
 	int totalcost;
+	char date[MAXLEN];
 };
 typedef struct sale SALE;
 
@@ -116,7 +117,7 @@ extern int readbackorders(void);
 extern int paymentdue(void);
 extern int fillbackorders(void);
 extern int deletebackorders(int input);
-
+extern int dailyorders(int input);
 //Date functions
 
 int datestringtoint(char * string);
