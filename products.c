@@ -24,7 +24,7 @@ int initproducts(void){
 	char temprecord[MAXREC];
 	//Open files
 	FILE * input = fopen("Products v4.txt", "r");
-	FILE * pfd = fopen("productsrelativefile.txt", _access("productsrelativefile.txt", 0) < 0 ? "w" : "r+");
+	FILE * pfd = fopen("productsrelativefile.dat", _access("productsrelativefile.dat", 0) < 0 ? "w" : "r+");
 	
 	
 	long productid = header.first_id = 1; //1 is the first PID
@@ -81,7 +81,7 @@ int readproducts(void){
 	PRODUCT product;
 	HEADER header;
 	// open product relatve file
-	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	//access first available id
 	fseek(pfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, pfd);
@@ -113,7 +113,7 @@ int addnewproducts(void)
 	HEADER header;
 	
 	//open product relative file
-	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	
 	
 	//Access header record to get first available product id 
@@ -195,7 +195,7 @@ int deleteproducts(int input){
 	HEADER header;
 	
 	//Open relative file
-	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	
 	//Read supplier values from file
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
@@ -212,7 +212,7 @@ int deleteproducts(int input){
 
 int changeproducts(void){
 	//open product reletive file to read and write
-	FILE * pfd = fopen("productsrelativefile.txt", "r+");
+	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	
 	char *tempstring;
 	long productid;

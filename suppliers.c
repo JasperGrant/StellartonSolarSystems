@@ -26,7 +26,7 @@ int initsuppliers(void){
 	char temprecord[MAXREC]; //array to read in 
 	//Open files
 	FILE * input = fopen("Suppliers v2.txt", "r");
-	FILE * sfd = fopen("suppliersrelativefile.txt", _access("suppliersrelativefile.txt", 0) < 0 ? "w" : "r+");
+	FILE * sfd = fopen("suppliersrelativefile.dat", _access("suppliersrelativefile.dat", 0) < 0 ? "w" : "r+");
 	
 	
 	long supplierid = header.first_id = 1000; //1001 is the first supplier id
@@ -82,7 +82,7 @@ int readsuppliers(void){
 	SUPPLIER supplier;
 	HEADER header;
 	// open product relatve file
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	//access first available id
 	fseek(sfd, 0, SEEK_SET);
 	fread(&header, sizeof(HEADER), 1, sfd);
@@ -112,7 +112,7 @@ int addnewsuppliers(void)
 	HEADER header;
 	
 	//open supplier reletive file for reading
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	
 	
 	/* Access header record to get first available product id */
@@ -189,7 +189,7 @@ int deletesuppliers(int input){
 	HEADER header;
 	
 	//Open relative file
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	
 	//Read supplier values from file
 	fseek(sfd, (input-1000)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
@@ -207,7 +207,7 @@ int deletesuppliers(int input){
 int changesuppliers(void){
 	
 	//open the supplier reletive file to read
-	FILE * sfd = fopen("suppliersrelativefile.txt", "r+");
+	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	
 	char *tempstring;
 	long supplierid;

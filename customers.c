@@ -25,7 +25,7 @@ int initcustomers(void){
 	
 	//Open files
 	FILE * input = fopen("Customers.txt", "r");
-	FILE * cfd = fopen("customersrelativefile.txt", _access("customersrelativefile.txt", 0) < 0 ? "w" : "r+");
+	FILE * cfd = fopen("customersrelativefile.dat", _access("customersrelativefile.dat", 0) < 0 ? "w" : "r+");
 
 	//Assign value to CID and header next CID
 	long customerid = header.first_id = 1000; //1000 is the first CID
@@ -86,7 +86,7 @@ int readcustomers(void){
 	HEADER header;
 	
 	//Open relative file
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
 	//Find next CID from header
 	fseek(cfd, 0, SEEK_SET);
@@ -120,7 +120,7 @@ int addnewcustomers(void)
 	HEADER header;
 	
 	//Open relative file
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
 	
 	/* Access header record to get first available customer id */
@@ -203,7 +203,7 @@ int deletecustomers(int input){
 	HEADER header;
 	
 	//Open relative file
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
 	//Read customer values from file
 	fseek(cfd, (input-1000)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
@@ -222,7 +222,7 @@ int deletecustomers(int input){
 int changecustomers(void){
 	
 	//open the supplier reletive file to read
-	FILE * cfd = fopen("customersrelativefile.txt", "r+");
+	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
 	char *tempstring;
 	long customerid;

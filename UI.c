@@ -37,7 +37,7 @@ int main(void){
 	
 	//Convert to operable int
 	globaldate = datestringtoint(datestring);
-	printf("%d", globaldate);
+
 	//Copy input string to global string
 	strcpy(globaldatestring, datestring);
 	
