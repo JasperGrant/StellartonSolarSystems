@@ -214,6 +214,16 @@ int deleteproducts(int input){
 	//Open relative file
 	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	
+	//Read from header to find first availible ID
+	fseek(pfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, pfd);
+	if((input<PRODUCTFIRSTID) || (input>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	
+	
 	//Read supplier values from file
 	fseek(pfd, (input-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
@@ -248,6 +258,15 @@ int changeproducts(void){
 	PRODUCT product;
 	HEADER header;
 	// open product relatve file
+	
+	//Read from header to find first availible ID
+	fseek(pfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, pfd);
+	if((productid<PRODUCTFIRSTID) || (productid>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
 	
 	int option;
 	int op = 1;

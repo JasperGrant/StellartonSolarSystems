@@ -221,6 +221,15 @@ int deletecustomers(int input){
 	//Open relative file
 	FILE * cfd = fopen("customersrelativefile.dat", "r+");
 	
+	//Read from header to find first availible ID
+	fseek(cfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, cfd);
+	if((input<CUSTOMERFIRSTID) || (input>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	
 	//Read customer values from file
 	fseek(cfd, (input-CUSTOMERFIRSTID)*sizeof(CUSTOMER) + sizeof(HEADER), SEEK_SET);
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
@@ -251,12 +260,20 @@ int changecustomers(void){
 	fgets(tempstring, MAXLEN, stdin);
 	
 	customerid = atoi(tempstring);
-	fflush(stdin);
 	
 	//intialzing the structs
 	CUSTOMER customer;
 	HEADER header;
 	
+	//Read from header to find first availible ID
+	fseek(cfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, cfd);
+	if((customerid<CUSTOMERFIRSTID) || (customerid>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	fflush(stdin);
 	
 	int option;
 	int op = 1;

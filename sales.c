@@ -98,84 +98,107 @@ int addnewsales(void){
 	CUSTOMER customer;
 	PRODUCT product;
 	SALE sale;
-
+	int op = 1; //Declare as true so that the loop will run once at a minimum
 	
 	//Open relative files
 	FILE * cfd = fopen("customersrelativefile.dat", "r");//Open customer relative file
 	FILE * pfd = fopen("productsrelativefile.dat", "r+");//Open product relative file
 	FILE * tfd;
-	
+	while(op){
 	//Prompt for CID, PID and quantity of order
-	printf("Enter Customer ID: ");
-	scanf("%d",&sale.CID);
-	printf("Enter Product ID: ");
-	scanf("%d",&sale.PID);
-	printf("Enter quantity of product: ");
-	scanf("%d",&sale.quantity);
+		printf("Enter Customer ID: ");
+		scanf("%d",&sale.CID);
 		
-	//Access customer that goes with CID
-	fseek(cfd, sizeof(HEADER) + ((sale.CID-CUSTOMERFIRSTID)*sizeof(CUSTOMER)), SEEK_SET);
-	fread(&customer, sizeof(CUSTOMER), 1, cfd);
-
-	//Access product that goes with PID
-	fseek(pfd, sizeof(HEADER) + ((sale.PID-PRODUCTFIRSTID)*sizeof(PRODUCT)), SEEK_SET);
-	fread(&product, sizeof(PRODUCT), 1, pfd);
+		//Read from header to find first availible ID
+		fseek(cfd, 0, SEEK_SET);
+		fread(&header, sizeof(HEADER), 1, cfd);
+		if((sale.CID<CUSTOMERFIRSTID) || (sale.CID>=header.first_id))
+		{
+			printf("Invalid CID\n");
+			return -1;
+		}
+		
+		printf("Enter Product ID: ");
+		scanf("%d",&sale.PID);
+		
+		//Read from header to find first availible ID
+		fseek(pfd, 0, SEEK_SET);
+		fread(&header, sizeof(HEADER), 1, pfd);
+		if((sale.PID<PRODUCTFIRSTID) || (sale.PID>=header.first_id))
+		{
+			printf("Invalid PID\n");
+			return -1;
+		}
+		
+		printf("Enter quantity of product: ");
+		scanf("%d",&sale.quantity);
+		
+		//Access customer that goes with CID
+		fseek(cfd, sizeof(HEADER) + ((sale.CID-CUSTOMERFIRSTID)*sizeof(CUSTOMER)), SEEK_SET);
+		fread(&customer, sizeof(CUSTOMER), 1, cfd);
 	
-	//Sale quantity and product stock are the same the last of the products has been bought so the product can be deleted.
-	if(sale.quantity == product.stock){
-		deleteproducts(sale.PID);
-		tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
-		dailyorders(sale.PID);
-	}
-	//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered
-	else if((product.stock - sale.quantity < product.reorder) && (product.stock - sale.quantity > 0)) {
-		tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
-		dailyorders(sale.PID);
-	}
+		//Access product that goes with PID
+		fseek(pfd, sizeof(HEADER) + ((sale.PID-PRODUCTFIRSTID)*sizeof(PRODUCT)), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, pfd);
+		
+		//Sale quantity and product stock are the same the last of the products has been bought so the product can be deleted.
+		if(sale.quantity == product.stock){
+			deleteproducts(sale.PID);
+			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
+			dailyorders(sale.PID);
+		}
+		//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered
+		else if((product.stock - sale.quantity < product.reorder) && (product.stock - sale.quantity > 0)) {
+			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
+			dailyorders(sale.PID);
+		}
+		
+		//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
+		else if(sale.quantity > product.stock){
+			
+			printf("Sale impossible as quantity of item requested is greater then stock. Order has been added to the backorders to be fullfilled when the stock is updated\n");
+		    tfd = fopen("backorders.dat", "r+");//Open product relative file
+		}
+		//if sale is possible just open the sales reletive file
+		else{
+			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
+			
+			//Decrement stock with quantity
+			product.stock-=sale.quantity;
+			
+			//Write new quantity to products relative file
+			fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
+			fwrite(&product, sizeof(PRODUCT), 1, pfd);
+		}
 	
-	//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
-	else if(sale.quantity > product.stock){
+			
+		//Obtain first availible TID
+		fseek(tfd, 0, SEEK_SET);
+		fread(&header, sizeof(HEADER), 1, tfd);
+		sale.TID = header.first_id; 
 		
-		printf("Sale impossible as quantity of item requested is greater then stock. Order has been added to the backorders to be fullfilled when the stock is updated\n");
-	    tfd = fopen("backorders.dat", "r+");//Open product relative file
+		//Set sale status to active
+		sale.status = ACTIVE;
+			
+		//Properly assign values needed from product and customer to sale
+		strcpy(sale.name, customer.name);
+		strcpy(sale.productname, product.name);
+		strcpy(sale.date, globaldatestring);
+		sale.totalcost = product.unitcost * sale.quantity;
+			
+		//Write sale to relative file
+		fseek(tfd, sizeof(HEADER) + (header.first_id-SALESFIRSTID) * sizeof(SALE), SEEK_SET);
+		fwrite(&sale, sizeof(SALE), 1, tfd);
+			
+		header.first_id++;//Increment availible ID by 1
+			
+		//Write new first_id to header
+		fseek(tfd, 0, SEEK_SET);
+		fwrite(&header, sizeof(HEADER), 1, tfd);
+		printf("Another sale?\nEnter 0 for NO       Enter 1 for YES\n");
+		scanf("%d", &op);
 	}
-	//if sale is possible just open the sales reletive file
-	else{
-		tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
-		
-		//Decrement stock with quantity
-		product.stock-=sale.quantity;
-		
-		//Write new quantity to products relative file
-		fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
-		fwrite(&product, sizeof(PRODUCT), 1, pfd);
-	}
-
-		
-	//Obtain first availible TID
-	fseek(tfd, 0, SEEK_SET);
-	fread(&header, sizeof(HEADER), 1, tfd);
-	sale.TID = header.first_id; 
-	
-	//Set sale status to active
-	sale.status = ACTIVE;
-		
-	//Properly assign values needed from product and customer to sale
-	strcpy(sale.name, customer.name);
-	strcpy(sale.productname, product.name);
-	strcpy(sale.date, globaldatestring);
-	sale.totalcost = product.unitcost * sale.quantity;
-		
-	//Write sale to relative file
-	fseek(tfd, sizeof(HEADER) + (header.first_id-SALESFIRSTID) * sizeof(SALE), SEEK_SET);
-	fwrite(&sale, sizeof(SALE), 1, tfd);
-		
-	header.first_id++;//Increment availible ID by 1
-		
-	//Write new first_id to header
-	fseek(tfd, 0, SEEK_SET);
-	fwrite(&header, sizeof(HEADER), 1, tfd);
-	
+	fflush(stdin);
 	fclose(tfd);
 	//Close files
 	fclose(cfd);
@@ -213,6 +236,16 @@ int deletesales(int input){
 	
 	//Open relative file
 	FILE * tfd = fopen("salesrelativefile.dat", "r+");
+	
+	//Read from header to find first availible ID
+	fseek(tfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, tfd);
+	if((input<SALESFIRSTID) || (input>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	
 	
 	//Read sales values from file
 	fseek(tfd, (input-SALESFIRSTID)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
@@ -322,16 +355,28 @@ int fillbackorders(void){
 	int inputID, inputQuantity;
 	printf("Enter PID of product with filled order:\n");
 	scanf("%d", &inputID);
-	printf("Enter Quantity of items filled:\n");
-	scanf("%d", &inputQuantity);
+	
 	//Init structs
 	SALE sale;
 	HEADER header;
 	PRODUCT product;
 	
+	//Open products relative file
+	FILE * pfd = fopen("productsrelativefile.dat", "r+");
+	//Read from header to find first availible ID
+	fseek(pfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, pfd);
+	if((inputID<PRODUCTFIRSTID) || (inputID>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	
+	printf("Enter Quantity of items filled:\n");
+	scanf("%d", &inputQuantity);
+	
 	//Open relative files
 	FILE * tfd = fopen("backorders.dat", "r+");
-	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	char filename[MAXLEN];
 	sprintf(filename, "ORDERSFILLED%d", globaldate);
 	FILE * ordersfilled = fopen(filename, _access("customersrelativefile.dat", 0) < 0 ? "w" : "a");

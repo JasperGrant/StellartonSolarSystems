@@ -204,6 +204,15 @@ int deletesuppliers(int input){
 	//Open relative file
 	FILE * sfd = fopen("suppliersrelativefile.dat", "r+");
 	
+	//Read from header to find first availible ID
+	fseek(sfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, sfd);
+	if((input<SUPPLIERFIRSTID) || (input>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
+	
 	//Read supplier values from file
 	fseek(sfd, (input-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
@@ -238,6 +247,15 @@ int changesuppliers(void){
 	//intialzing the structs
 	SUPPLIER supplier;
 	HEADER header;
+	
+	//Read from header to find first availible ID
+	fseek(sfd, 0, SEEK_SET);
+	fread(&header, sizeof(HEADER), 1, sfd);
+	if((supplierid<SUPPLIERFIRSTID) || (supplierid>=header.first_id))
+	{
+		printf("Invalid ID\n");
+		return -1;
+	}
 	
 	
 	int option;
