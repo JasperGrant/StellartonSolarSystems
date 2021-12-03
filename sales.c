@@ -291,7 +291,7 @@ int dailyorders(int input){
 		check = strcmp(product.manufacturer, supplier.manufacturer);
 	}
 	//print the daily order to the text file ORDERS with encoded date
-	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, Quantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
+	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %sQuantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
 	fclose(dfd);
 	
 }
@@ -351,6 +351,7 @@ int fillbackorders(void){
 			sale.PID, sale.productname, sale.quantity, (float)sale.totalcost/DOLLARSTOCENTS);
 			//Set filemode as binary
 			_fmode = _O_BINARY;
+
 			//For every applicable item remove from inputted quantiy the quantity of that order
 			inputQuantity-=sale.quantity;
 			if(inputQuantity<0){
@@ -362,7 +363,7 @@ int fillbackorders(void){
 			else{
 				//Only delete backorder if inputquantity did not go under 0.
 				deletebackorders(sale.TID);
-
+			
 			}
 		}
 	}

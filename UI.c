@@ -48,7 +48,7 @@ int main(void){
 	while(1){
 		
 		//Print initial user options
-		printf("Select function:\n1.Change stores\n2.Add to stores\n3.Delete Records\n4.Display Stores\n5.Initialize Stores\n6.Make Sale\n7.Fill backorders0.Quit\n");
+		printf("Select function:\n1.Change stores\n2.Add to stores\n3.Delete Records\n4.Display Stores\n5.Initialize Stores\n6.Make Sale\n7.Fill backorders\n0.Quit\n");
 		
 		//Read user input
 		scanf("%d", &input);
@@ -61,24 +61,24 @@ int main(void){
 			
 			//updating records case
 			case 1:
-				printf("Updating elements\n");
+				printf("Updating elements...\n");
 				changeelements();
 				break;
 			//Adding new records case
 			case 2:
-				printf("Adding new records\n");
+				printf("Adding new records...\n");
 			    addelements();
 				break;
 			//deleting records case
 			case 3:
-				printf("Deleting records\n");
+				printf("Deleting records...\n");
 				deleteelements();
 				break;
 				
 			//disply stores case
 			case 4:
 				displayelements();
-				printf("Displaying stores\n");
+				printf("Displaying stores...\n");
 				break;
 			
 			//Initialization cases
@@ -102,12 +102,12 @@ int main(void){
 			
 			//Making sales case
 			case 6:
-				printf("Making a SALE\n");
+				printf("Making a sale...\n");
 				addnewsales();
 				break;
 		    //filling up a backorder case
 			case 7:
-				printf("Filling backorders\n");
+				printf("Filling backorders...\n");
 				fillbackorders();
 			break;
 		}

@@ -83,7 +83,7 @@ int deleteelements(void){
 int displayelements(void){
 	//function selection variable
 	int input;
-	printf("Select Function\n1. Display customers\n2. Display suppliers\n3. Display products\n4. Display sales\n5. Display backorders");
+	printf("Select Function\n1. Display customers\n2. Display suppliers\n3. Display products\n4. Display sales\n5. Display backorders\n");
 	scanf("%d", &input);
 	switch(input){
 		case 1:
