@@ -48,7 +48,7 @@ int main(void){
 	while(1){
 		
 		//Print initial user options
-		printf("Select function:\n1. Add new customers\n2. Add new suppliers\n3. Add a new product\n4. Make sale\n5. Initialize customer, product, supplier, and sales stores\n6. Display customer store\n7. Display product store\n8. Display supplier store\n9. Display sales store\n10. Update Information\n0. Quit\n");
+		printf("Select function:\n1.Change stores\n2.Add to stores\n3.Delete Records\n4.Display Stores\n5.Initialize Stores\n6.Make Sale\n7.Fill backorders0.Quit\n");
 		
 		//Read user input
 		scanf("%d", &input);
@@ -59,26 +59,26 @@ int main(void){
 			case 0:
 				return 0;
 			
-			//Adding cases
+			//updating records case
 			case 1:
-				printf("Adding new customers...\n");
-				addnewcustomers();
+				printf("Updating elements\n");
+				changeelements();
 				break;
-			
+			//Adding new records case
 			case 2:
-				printf("Adding new suppliers...\n");\
-				addnewsuppliers();
+				printf("Adding new records\n");
+			    addelements();
 				break;
-			
+			//deleting records case
 			case 3:
-				printf("Adding new products...\n");
-				addnewproducts();
+				printf("Deleting records\n");
+				deleteelements();
 				break;
 				
-			
+			//disply stores case
 			case 4:
-				printf("Making sale...\n");
-				addnewsales();
+				displayelements();
+				printf("Displaying stores\n");
 				break;
 			
 			//Initialization cases
@@ -100,72 +100,14 @@ int main(void){
 				}
 				break;
 			
-			//Displaying cases
+			//Making sales case
 			case 6:
-				printf("Displaying customers...\n");
-				readcustomers();
+				printf("Making a SALE\n");
+				addnewsales();
 				break;
-			
+		    //filling up a backorder case
 			case 7:
-				printf("Displaying products...\n");
-				readproducts();
-				break;
-			
-			case 8:
-				printf("Displaying suppliers...\n");
-				readsuppliers();
-				break;
-		
-			case 9:
-				printf("Displaying sales...\n");
-				readsales();
-				break;
-				
-			case 15:
-				printf("Displaying backorders...\n");
-				readbackorders();
-				break;
-			
-			case 10:
-				//Sub menu
-			    printf("Select function:\n1. Change a Customer Field\n2. Change a Product Field\n3. Change a Supplier Field\n");
-			    
-			    scanf("%d", &input);
-			    
-			    switch(input){
-			    	case 1:
-			    		printf("Updating Customer Fields...\n");
-			    		changecustomers();
-			    		break;
-			    	
-			    	case 2:
-			    		printf("Updating Product Fields...\n");
-			    	    changeproducts();
-			    	    break;
-			    	
-			    	case 3:
-			    		printf("Updating Supplier Fields...\n");
-			    	    changesuppliers();
-			    	    break;
-				}
-				break;
-			case 11:
-				userdeletecustomers();
-				break;
-			case 12:
-				userdeleteproducts();
-			break;
-			case 13:
-				userdeletesuppliers();
-			break;
-			case 14:
-				userdeletesales();
-			break;
-			
-			
-			
-			
-			case 17:
+				printf("Filling backorders\n");
 				fillbackorders();
 			break;
 		}
