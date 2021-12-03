@@ -290,7 +290,7 @@ int paymentdue(void){
 		//Used to format shell command: copy ORDERS(date-30) PAY_DUE(date)
 		sprintf(command, "copy %s %s", pastfilename, filename);
 		//execute copy command
-		system(command);
+		system(command); //The system function passes a string to the command line. Here we use the command line function copy to copy and rename the chosen file. Source: https://www.tutorialspoint.com/c_standard_library/c_function_system.htm
 	}
 	else{
 		return 0;
@@ -315,7 +315,7 @@ int fillbackorders(void){
 	FILE * pfd = fopen("productsrelativefile.dat", "r+");
 	char filename[MAXLEN];
 	sprintf(filename, "ORDERSFILLED%d", globaldate);
-	FILE * ordersfilled = fopen(filename, "a");
+	FILE * ordersfilled = fopen(filename, _access("customersrelativefile.dat", 0) < 0 ? "w" : "a");
 	
 	//Find first_id from header
 	fseek(tfd, 0, SEEK_SET);
