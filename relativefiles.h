@@ -92,7 +92,11 @@ struct sale{
 };
 typedef struct sale SALE;
 
-
+//Menu functions
+extern int addelements(void);
+extern int deleteelements(void);
+extern int changeelements(void);
+extern int displayelements(void);
 //Conversion functions
 extern int stringtointegervalue(char * string);
 //Customer functions
