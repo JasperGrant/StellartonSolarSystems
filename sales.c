@@ -344,9 +344,7 @@ int paymentdue(void){
 		//execute copy command
 		system(command); //The system function passes a string to the command line. Here we use the command line function copy to copy and rename the chosen file. Source: https://www.tutorialspoint.com/c_standard_library/c_function_system.htm
 	}
-	else{
-		return 0;
-	}
+	return 0;
 
 }
 /**/
