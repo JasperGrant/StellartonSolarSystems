@@ -278,6 +278,10 @@ int changeproducts(void){
 	//use the customer id to access the customer record
 	fseek(pfd, (productid-1)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
 	fread(&product, sizeof(PRODUCT), 1, pfd);
+	printf("The following record will be changed \n");
+	printf("Product ID: %ld\nProduct Name:%s\nClassification: %s\nManufacturer: %s\nCost: $ %.2f\nManufacturer Code: %s\nStock: %d\nReorder Level: %d\n\n\n", 
+			product.PID, product.name, product.classification, product.manufacturer, 
+			(float)product.unitcost/100, product.manufacturercode, product.stock, product.reorder);
 	
 	fflush(stdin); //Flush input to not confused program with scanf followed by fgets.
 	

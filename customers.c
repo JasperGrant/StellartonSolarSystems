@@ -287,6 +287,10 @@ int changecustomers(void){
     //use the customer id to access the customer record
 	
 	fread(&customer, sizeof(CUSTOMER), 1, cfd);
+	printf("The following record will be changed \n");
+	printf("Customer ID: %ld\nName: %s\nBusiness Name: %s\nStreet Address: %s\nTown: %s\nProvince: %s\nPostal Code: %s\nTelephone: %s\n\n\n", 
+			customer.CID, customer.name, customer.businessname, customer.streetaddress, 
+			customer.town, customer.province, customer.postalcode, customer.telephone);
 	fflush(stdin);
 	//use the option entered by the user to change a particular feild
 	switch(option){

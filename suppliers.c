@@ -269,6 +269,9 @@ int changesuppliers(void){
 	
 	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
+	printf("The following record will be changed \n");
+	printf("Supplier ID: %ld\nManufacturer: %s\nContact: %s\nCompany: %s\nAddress: %s\nTelephone: %s\nEmail: %s\n\n\n", 
+			supplier.SID, supplier.manufacturer, supplier.contact, supplier.company, supplier.address, supplier.telephone, supplier.email);
 	fflush(stdin);
 	//use the option entered by the user to change a particular feild
 	switch(option){
