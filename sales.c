@@ -124,11 +124,14 @@ int addnewsales(void){
 		//Read from header to find first availible ID
 		fseek(pfd, 0, SEEK_SET);
 		fread(&header, sizeof(HEADER), 1, pfd);
-		if((sale.PID<PRODUCTFIRSTID) || (sale.PID>=header.first_id))
+		fseek(pfd, sizeof(HEADER) + (sale.PID-1) * sizeof(PRODUCT), SEEK_SET);
+		fread(&product, sizeof(PRODUCT), 1, pfd);
+		if((sale.PID<PRODUCTFIRSTID) || (sale.PID>=header.first_id) || (product.status == DELETED))
 		{
 			printf("Invalid PID\n");
 			return -1;
 		}
+		
 		
 		printf("Enter quantity of product: ");
 		scanf("%d",&sale.quantity);
@@ -170,7 +173,7 @@ int addnewsales(void){
 			fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
 			fwrite(&product, sizeof(PRODUCT), 1, pfd);
 		}
-	
+		
 			
 		//Obtain first availible TID
 		fseek(tfd, 0, SEEK_SET);
@@ -245,7 +248,6 @@ int deletesales(int input){
 		printf("Invalid ID\n");
 		return -1;
 	}
-	
 	
 	//Read sales values from file
 	fseek(tfd, (input-SALESFIRSTID)*sizeof(SALE) + sizeof(HEADER), SEEK_SET);
@@ -451,7 +453,4 @@ int deletebackorders(int input){
 	//Close relative file
 	fclose(tfd);
 }
-
-
-
 
