@@ -148,20 +148,14 @@ int addnewsales(void){
 		
 		//Sale quantity and product stock are the same the last of the products has been bought so the product can be deleted.
 		if(sale.quantity == product.stock){
-			deleteproducts(sale.PID);
-			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
 			dailyorders(sale.PID);
+			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
+			deleteproducts(sale.PID);
 			printf(" 1 after daily orders fucntion call\n");
 		}
 		//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered
 		else if((product.stock - sale.quantity < product.reorder) && (product.stock - sale.quantity > 0)) {
 			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
-			
-			product.stock-=sale.quantity;
-			
-			//Write new quantity to products relative file
-			fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
-			fwrite(&product, sizeof(PRODUCT), 1, pfd);
 			dailyorders(sale.PID);
 			printf("after daily orders fucntion call\n");
 		}
@@ -202,22 +196,23 @@ int addnewsales(void){
 		//Write sale to relative file
 		fseek(tfd, sizeof(HEADER) + (header.first_id-SALESFIRSTID) * sizeof(SALE), SEEK_SET);
 		fwrite(&sale, sizeof(SALE), 1, tfd);
-		printf("id before increament %ld\n",header.first_id);
+		//printf("id before increament %ld\n",header.first_id);
 		
 		fseek(tfd, 0, SEEK_SET);
 		fread(&header, sizeof(HEADER), 1, tfd);	
 		
 		header.first_id++;//Increment availible ID by 1
-		printf("after increament %ld\n",header.first_id);
+		//printf("after increament %ld\n",header.first_id);
 		
 		//Write new first_id to header
 		fseek(tfd, 0, SEEK_SET);
 		fwrite(&header, sizeof(HEADER), 1, tfd);
 		printf("Another sale?\nEnter 0 for NO       Enter 1 for YES\n");
 		scanf("%d", &op);
+		
 		fseek(tfd, 0, SEEK_SET);
-		fread(&header, sizeof(HEADER), 1, tfd);
-		printf("id at the end %ld",header.first_id);
+	    fread(&header, sizeof(HEADER), 1, tfd);
+		//printf("id at the end %ld",header.first_id);
 	}
 	fflush(stdin);
 	fclose(tfd);
@@ -323,7 +318,7 @@ int dailyorders(int input){
 	SUPPLIER supplier;
 	
 	
-	int check;
+	int check= -1;
 	//open product and supplier reletive files to read
 	FILE * pfd = fopen("productsrelativefile.dat", "r");
 	FILE * sfd = fopen("suppliersrelativefile.dat", "r");
@@ -331,6 +326,7 @@ int dailyorders(int input){
 	sprintf(filename, "ORDERS%d", globaldate);
 
 	FILE * dfd = fopen(filename, "a");
+	long supplierid;
 	
 	//fseek to the relvant product id 
 	fseek(pfd, (input-SALESFIRSTID)*sizeof(PRODUCT) + sizeof(HEADER), SEEK_SET);
@@ -338,13 +334,20 @@ int dailyorders(int input){
 	fread(&product, sizeof(PRODUCT), 1, pfd);
 
 	//find supplier using the manufacturer and place the file pointer at the start of the records in the supplier file
+	supplierid = SUPPLIERFIRSTID;
 	fseek(sfd, sizeof(HEADER), SEEK_SET);
 	while(check!= 0){
+		fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
 		fread(&supplier, sizeof(SUPPLIER), 1, sfd);
-		check = strcmp(product.manufacturer, supplier.manufacturer);
+		supplierid++;
+	    check = strcmp(product.manufacturer, supplier.manufacturer);
+		printf("supplier manufacturer %s\n", supplier.manufacturer);
 	}
+	supplierid--;//we want to access the previus supplier record since the fread moves the file pointer to the next record
+	fseek(sfd, (supplierid-SUPPLIERFIRSTID)*sizeof(SUPPLIER) + sizeof(HEADER), SEEK_SET);
+	fread(&supplier, sizeof(SUPPLIER), 1, sfd);
 	//print the daily order to the text file ORDERS with encoded date
-	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %sQuantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
+	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %s, %ld, product manu %s, supplier manu %sQuantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email, supplier.SID, product.manufacturer, supplier.manufacturer);
 	fclose(dfd);
 	return 0;
 	
