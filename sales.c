@@ -112,7 +112,9 @@ int addnewsales(void){
 		//Read from header to find first availible ID
 		fseek(cfd, 0, SEEK_SET);
 		fread(&header, sizeof(HEADER), 1, cfd);
-		if((sale.CID<CUSTOMERFIRSTID) || (sale.CID>=header.first_id))
+		fseek(cfd, sizeof(HEADER) + (sale.CID-1000) * sizeof(CUSTOMER), SEEK_SET);
+		fread(&customer, sizeof(CUSTOMER), 1, cfd);
+		if((sale.CID<CUSTOMERFIRSTID) || (sale.CID>=header.first_id) || (customer.status == DELETED))
 		{
 			printf("Invalid CID\n");
 			return -1;
@@ -149,11 +151,19 @@ int addnewsales(void){
 			deleteproducts(sale.PID);
 			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
 			dailyorders(sale.PID);
+			printf(" 1 after daily orders fucntion call\n");
 		}
 		//Check if product stock falls below reorder level. If so do not delete the file but add the item to be ordered
 		else if((product.stock - sale.quantity < product.reorder) && (product.stock - sale.quantity > 0)) {
 			tfd = fopen("salesrelativefile.dat", "r+");//Open sale relative file
+			
+			product.stock-=sale.quantity;
+			
+			//Write new quantity to products relative file
+			fseek(pfd, sizeof(HEADER) + (sale.PID-SALESFIRSTID)*sizeof(PRODUCT), SEEK_SET);
+			fwrite(&product, sizeof(PRODUCT), 1, pfd);
 			dailyorders(sale.PID);
+			printf("after daily orders fucntion call\n");
 		}
 		
 		//Check if quantity is more then is in stock. If so inform customer and add the order to the backorder relative file
@@ -192,14 +202,22 @@ int addnewsales(void){
 		//Write sale to relative file
 		fseek(tfd, sizeof(HEADER) + (header.first_id-SALESFIRSTID) * sizeof(SALE), SEEK_SET);
 		fwrite(&sale, sizeof(SALE), 1, tfd);
-			
+		printf("id before increament %ld\n",header.first_id);
+		
+		fseek(tfd, 0, SEEK_SET);
+		fread(&header, sizeof(HEADER), 1, tfd);	
+		
 		header.first_id++;//Increment availible ID by 1
-			
+		printf("after increament %ld\n",header.first_id);
+		
 		//Write new first_id to header
 		fseek(tfd, 0, SEEK_SET);
 		fwrite(&header, sizeof(HEADER), 1, tfd);
 		printf("Another sale?\nEnter 0 for NO       Enter 1 for YES\n");
 		scanf("%d", &op);
+		fseek(tfd, 0, SEEK_SET);
+		fread(&header, sizeof(HEADER), 1, tfd);
+		printf("id at the end %ld",header.first_id);
 	}
 	fflush(stdin);
 	fclose(tfd);
@@ -328,6 +346,7 @@ int dailyorders(int input){
 	//print the daily order to the text file ORDERS with encoded date
 	fprintf(dfd, "%s, %ld, %s, %s, %s, %s, %sQuantity to be orderd: 10\n",globaldatestring, product.PID, product.classification, product.manufacturercode, supplier.contact, supplier.telephone, supplier.email);
 	fclose(dfd);
+	return 0;
 	
 }
 
